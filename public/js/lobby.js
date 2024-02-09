@@ -28,6 +28,7 @@ const fetchUserCallback = (data) => {
     console.log(user)
 
     //TODO: Hide Spinner
+    hideSpinner();
 }
 
 
