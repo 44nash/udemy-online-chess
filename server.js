@@ -12,7 +12,8 @@ const {newUser, removeUser} = require('./util/user')
 dotenv.config();
 // Routers
 const viewRoutes = require('./routes/views')
-const userRoutes = require('./routes/api/user')
+const userRoutes = require('./routes/api/user');
+const { createTestingRooms } = require('./util/room');
 
 const app = express()
 
@@ -77,6 +78,28 @@ io.on('connection', (socket) => {
             })
         });
     });
+
+    socket.on('get-rooms', (rank) => {
+        createTestingRooms()
+        redisClient.get('rooms', (err, reply) => {
+            if(err) throw err;
+
+            if(reply){
+                let rooms = JSON.parse(reply);
+
+                if(rank  === 'all'){
+                    socket.emit('receive-rooms', rooms)
+                }else{
+                    let filteredRooms = rooms.filter(room => room.players[0].user_rank === rank);
+
+                    socket.emit('receive-rooms', filteredRooms);
+                }
+            }else{
+                socket.emit('receive-rooms', [])
+            }
+
+        })
+    })
 
     socket.on('send-message', (message, user, roomId=null) => {
         if(roomId){
