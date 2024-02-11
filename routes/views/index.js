@@ -11,6 +11,6 @@ router.get('/', getLobbyPage)
 
 router.get('/games', getGamesPage)
 
-router.get('/rooms', getRoomPage)
+router.get('/room', getRoomPage)
 
 module.exports = router;
