@@ -13,7 +13,7 @@ dotenv.config();
 // Routers
 const viewRoutes = require('./routes/views')
 const userRoutes = require('./routes/api/user');
-const { createTestingRooms } = require('./util/room');
+const { createTestingRooms, createRoom } = require('./util/room');
 
 const app = express()
 
@@ -79,8 +79,26 @@ io.on('connection', (socket) => {
         });
     });
 
+    socket.on('create-room',  (roomId, time, user, password=null) => {
+        redisClient.get(roomId, (err, reply) => {
+            if(err) throw err;
+
+            if(reply){
+                socket.emit('error', `Room with id '${roomId}' already exists!`)
+            }else{
+                if(password){
+                    createRoom(roomId, user, time, password);
+                }else{
+                    createRoom(roomId, user, time);
+                }
+
+                socket.emit("room-created")
+            }
+        })
+    })
+
     socket.on('get-rooms', (rank) => {
-        createTestingRooms()
+        // createTestingRooms()
         redisClient.get('rooms', (err, reply) => {
             if(err) throw err;
 
