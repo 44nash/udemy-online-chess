@@ -5,7 +5,7 @@ const gamesList = document.getElementById("games-list");
 const noGamesMessage = document.getElementById("no-games-message");
 
 const createRoomBtn = document.getElementById("create-room");
-const joinRoomBtn = document.getElementById("join-room");
+const joinRandomBtn = document.getElementById("join-room");
 
 const createRoomFormContainer = document.getElementById("create-room-form-container");
 const createRoomForm = document.getElementById("create-room-form");
@@ -18,7 +18,7 @@ const roomPassword = document.getElementById("room-password");
 
 const joinRoomFormContainer = document.getElementById("join-room-form-container");
 const joinRoomForm = document.getElementById("join-room-form");
-const roomPasswordJoin = document.getElementById("room-password-join");
+const roomPasswordJoin = document.getElementById("join-room-password");
 const closeJoinRoomFormBtn = document.getElementById("close-join-form");
 
 roomPassword.readOnly = true;
@@ -58,13 +58,23 @@ const handleCreateRoomFormSubmit = e => {
 
 }
 
+const handleJoinRoomFormSubmit = e => {
+    e.preventDefault();
+
+    if(roomId){
+        const password = roomPasswordJoin.value;
+
+        socket.emit('join-room', gameId, user, password)
+    }
+}
+
 const addJoinButtonListeners = () => {
     document.querySelectorAll(".game button").forEach(button => {
         if(!button.classList.contains("disabled")){
             button.addEventListener("click", e => {
                 let game = button.parentNode;
 
-                if(game.dateset.withpassword === 'true'){
+                if(game.dataset.withpassword === 'true'){
                     gameId = game.id;
                     joinRoomFormContainer.classList.remove('hidden');
                 }else{
@@ -116,7 +126,32 @@ socket.on('receive-rooms', rooms => {
 })
 
 socket.on('room-created', () => {
-    console.log('Room Created')
+    let id = roomId.value
+
+    if(addPassword.checked && roomPassword.value !== ""){
+        window.location.href = window.location.origin + "/room?id=" + id + "&password=" + roomPassword.value;
+    }else{
+        window.location.href = window.location.origin + "/room?id=" + id;
+    } 
+
+})
+
+socket.on('room-joined', (id, password=null) => {
+    if(password){
+        window.location.href = window.location.origin + "/room?id=" + id + "&password=" + password;
+    }else{
+        window.location.href = window.location.origin + "/room?id=" + id;
+    }
+})
+
+addPassword.addEventListener("change", () => {
+    if(addPassword.checked){
+        roomPassword.readOnly = false;
+        passwordInputGroup.classList.remove('disabled');
+    }else{
+        roomPassword.readOnly = true;
+        passwordInputGroup.classList.add('disabled');
+    }
 })
 
 rankFilter.addEventListener("change", (e) => {
@@ -132,3 +167,12 @@ closeCreateRoomFormBtn.addEventListener('click', () => {
 })
 
 createRoomForm.addEventListener('submit', handleCreateRoomFormSubmit)
+
+
+
+
+closeJoinRoomFormBtn.addEventListener('click', () => {
+    joinRoomFormContainer.classList.add('hidden')
+})
+
+joinRoomForm.addEventListener('submit', handleJoinRoomFormSubmit)
