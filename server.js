@@ -13,7 +13,7 @@ dotenv.config();
 // Routers
 const viewRoutes = require('./routes/views')
 const userRoutes = require('./routes/api/user');
-const { createTestingRooms, createRoom, joinRoom } = require('./util/room');
+const { createTestingRooms, createRoom, joinRoom, removeRoom } = require('./util/room');
 
 const app = express()
 
@@ -127,6 +127,27 @@ io.on('connection', (socket) => {
         })
     })
 
+    socket.on('join-random', (user) => {
+        redisClient.get('rooms', (err, reply) => {
+            if(err) throw err;
+
+            if(reply){
+                let rooms = JSON.parse(reply);
+
+                let room = rooms.find(room => room.players[1] === null && !room.password);
+
+                if(room){
+                    joinRoom(room.id, user);
+                    socket.emit("room-joined", room.id);
+                }else{
+                    socket.emit('error', 'No room found!')
+                }
+            }else{
+                socket.emit('error', 'No room found!')
+            }
+        })
+    })
+
     socket.on('get-rooms', (rank) => {
         // createTestingRooms()
         redisClient.get('rooms', (err, reply) => {
@@ -167,7 +188,19 @@ io.on('connection', (socket) => {
                 let user = JSON.parse(reply);
 
                 if(user.room){
-                    //TODO: Remove user's room and also remove user from the room
+                    redisClient.get(user.room, (err, reply) => {
+                        if(err) throw err;
+
+                        if(reply){
+                            let room = JSON.parse(reply)
+
+                            if(!room.gameFinished){
+                                io.to(user.room).emit("error", "The other player left the game")
+                            }
+                        }
+                    })
+
+                    removeRoom(user.room, user.user_rank);
                 }
             }
         })
