@@ -166,6 +166,8 @@ const findPossibleMoves = (position, piece) => {
     switch(piece){
         case "pawn":
             return getPawnPossibleMoves(xAxisPos, yAxisPos, xAxisIndex, yAxisIndex)
+        case "rook":
+            return getRookPossibleMoves(xAxisPos, yAxisPos, xAxisIndex, yAxisIndex)
         default:
             return []
     }
