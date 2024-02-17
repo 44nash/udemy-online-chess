@@ -103,14 +103,14 @@ const onClickPiece = (e) => {
         return;
     }
 
-    //hidePossibleMoves()
+    hidePossibleMoves()
     
     let element = e.target.closest(".piece");
     let position = element.parentNode.id;
     let piece = element.dataset.piece;
 
     if(selectedPiece && selectedPiece.piece === piece && selectedPiece.position === position){
-        //hidePossibleMoves()
+        hidePossibleMoves()
         selectedPiece = null
         return;
     }
@@ -121,7 +121,7 @@ const onClickPiece = (e) => {
 
     console.log(possibleMoves)
 
-    // showPossibleMoves(possibleMoves)
+    showPossibleMoves(possibleMoves)
 }
 
 const addPieceListeners = () => {
@@ -133,7 +133,28 @@ const addPieceListeners = () => {
     })
 }
 // ---------------------------------------------------
+
 // Possible Moves Logic
+
+const showPossibleMoves = (possibleMoves) => {
+    possibleMoves.forEach(box => {
+        let possibleMoveBox = document.createElement('div')
+        possibleMoveBox.classList.add("possible-move");
+
+        // possibleMoveBox.addEventListener("click", move)
+
+        box.appendChild(possibleMoveBox)
+    })
+}
+
+const hidePossibleMoves = () => {
+    document.querySelectorAll('.possible-move').forEach(possibleMoveBox => {
+        let parent = possibleMoveBox.parentNode
+        // possibleMoveBox.removeEventListener('click', move)
+        parent.removeChild(possibleMoveBox)
+    })
+}
+
 const findPossibleMoves = (position, piece) => {
     let splittedPos = position.split("-");
     let yAxisPos = +splittedPos[1];
@@ -149,6 +170,8 @@ const findPossibleMoves = (position, piece) => {
             return []
     }
 }
+
+
 // ---------------------------------------------------
 const updateTimer = () => {}
 

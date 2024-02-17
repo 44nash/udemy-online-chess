@@ -269,7 +269,6 @@ const getPawnPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
             }
 
             let box = document.getElementById(`${xAxisPos}-${yAxis[y]}`);
-            console.log(`${xAxisPos}-${yAxis[y]} ==> `, box)
 
             if(box.childElementCount === 0){
                 possibleMoves.push(box);
