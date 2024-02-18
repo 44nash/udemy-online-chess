@@ -171,7 +171,14 @@ const findPossibleMoves = (position, piece) => {
         case "bishop":
             return getBishopPossibleMoves(xAxisIndex, yAxisIndex) 
         case "knight":
-            return getKnightPossibleMoves(xAxisIndex, yAxisIndex)                            
+            return getKnightPossibleMoves(xAxisIndex, yAxisIndex)   
+        case "queen":
+            return Array.prototype.concat(
+                getRookPossibleMoves(xAxisPos, yAxisPos, xAxisIndex, yAxisIndex),
+                getBishopPossibleMoves(xAxisIndex, yAxisIndex) 
+            )
+        case "king":
+            return getKingPossibleMoves(xAxisPos, yAxisPos, xAxisIndex, yAxisIndex)                         
         default:
             return []
     }
