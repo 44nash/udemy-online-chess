@@ -22,21 +22,22 @@ const lightPieces = [
     //     piece: 'rook',
     //     identity:'rA'
     // },
-    // {
-    //     position: "B-8",
-    //     icon: "../assets/chess-icons/light/chess-knight-light.svg",
-    //     points: 3,
-    //     piece: 'knight',
-    //     identity:'nB'
-        
-    // },
     {
-        position: "C-8",
-        icon: "../assets/chess-icons/light/chess-bishop-light.svg",
+        // position: "B-8",
+        position: "F-5",
+        icon: "../assets/chess-icons/light/chess-knight-light.svg",
         points: 3,
-        piece: 'bishop',
-        identity:'bC'
+        piece: 'knight',
+        identity:'nB'
+        
     },
+    // {
+    //     position: "C-8",
+    //     icon: "../assets/chess-icons/light/chess-bishop-light.svg",
+    //     points: 3,
+    //     piece: 'bishop',
+    //     identity:'bC'
+    // },
     // {
     //     position: "D-8",
     //     icon: "../assets/chess-icons/light/chess-queen-light.svg",
@@ -51,20 +52,20 @@ const lightPieces = [
         piece: 'king',
         identity:'kE'
     },
-    {
-        position: "F-8",
-        icon: "../assets/chess-icons/light/chess-bishop-light.svg",
-        points: 3,
-        piece: 'bishop',
-        identity:'bF'
-    },
     // {
-    //     position: "G-8",
-    //     icon: "../assets/chess-icons/light/chess-knight-light.svg",
+    //     position: "F-8",
+    //     icon: "../assets/chess-icons/light/chess-bishop-light.svg",
     //     points: 3,
-    //     piece: 'knight',
-    //     identity:'nG'
+    //     piece: 'bishop',
+    //     identity:'bF'
     // },
+    {
+        position: "G-8",
+        icon: "../assets/chess-icons/light/chess-knight-light.svg",
+        points: 3,
+        piece: 'knight',
+        identity:'nG'
+    },
     // {
     //     position: "H-8",
     //     icon: "../assets/chess-icons/light/chess-rook-light.svg",
@@ -557,4 +558,121 @@ const getBishopPossibleMoves = (xAxisIndex, yAxisIndex) => {
         yInc++;
     }
     return possibleMoves
+}
+
+const getKnightPossibleMoves = (xAxisIndex, yAxisIndex) => {
+    let possibleMoves = []
+
+    // Left-Up
+    if(xAxisIndex - 2 > -1 && yAxisIndex + 1 < yAxis.length){
+        let block = document.getElementById(`${xAxis[xAxisIndex - 2]}-${yAxis[yAxisIndex + 1]}`);
+
+        if(block.childElementCount > 0){
+            if(block.children[0].classList.contains(enemy)){
+                possibleMoves.push(block)
+            }
+        }else{
+            possibleMoves.push(block)
+        }
+
+    }
+
+    // Left-Down
+    if(xAxisIndex - 2 > -1 && yAxisIndex - 1 > -1){
+        let block = document.getElementById(`${xAxis[xAxisIndex - 2]}-${yAxis[yAxisIndex - 1]}`);
+
+        if(block.childElementCount > 0){
+            if(block.children[0].classList.contains(enemy)){
+                possibleMoves.push(block)
+            }
+        }else{
+            possibleMoves.push(block)
+        }
+    }
+
+    // Right-Up
+    if(xAxisIndex + 2 < xAxis.length && yAxisIndex + 1 < yAxis.length){
+        let block = document.getElementById(`${xAxis[xAxisIndex + 2]}-${yAxis[yAxisIndex + 1]}`);
+
+        if(block.childElementCount > 0){
+            if(block.children[0].classList.contains(enemy)){
+                possibleMoves.push(block)
+            }
+        }else{
+            possibleMoves.push(block)
+        }
+
+    }        
+
+    // Right-Down
+    if(xAxisIndex + 2 < xAxis.length && yAxisIndex - 1 > -1){
+        let block = document.getElementById(`${xAxis[xAxisIndex + 2]}-${yAxis[yAxisIndex - 1]}`);
+
+        if(block.childElementCount > 0){
+            if(block.children[0].classList.contains(enemy)){
+                possibleMoves.push(block)
+            }
+        }else{
+            possibleMoves.push(block)
+        }
+
+    }
+
+    // Up-Left
+    if(xAxisIndex - 1 > -1 && yAxisIndex + 2 < yAxis.length){
+        let block = document.getElementById(`${xAxis[xAxisIndex - 1]}-${yAxis[yAxisIndex + 2]}`);
+
+        if(block.childElementCount > 0){
+            if(block.children[0].classList.contains(enemy)){
+                possibleMoves.push(block)
+            }
+        }else{
+            possibleMoves.push(block)
+        }
+
+    }  
+    
+    // Up-Right
+    if(xAxisIndex + 1 < xAxis.length && yAxisIndex + 2 < yAxis.length){
+        let block = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxis[yAxisIndex + 2]}`);
+
+        if(block.childElementCount > 0){
+            if(block.children[0].classList.contains(enemy)){
+                possibleMoves.push(block)
+            }
+        }else{
+            possibleMoves.push(block)
+        }
+
+    }
+    
+    // Down-Left
+    if(xAxisIndex - 1 > -1 && yAxisIndex - 2 > -1){
+        let block = document.getElementById(`${xAxis[xAxisIndex - 1]}-${yAxis[yAxisIndex - 2]}`);
+
+        if(block.childElementCount > 0){
+            if(block.children[0].classList.contains(enemy)){
+                possibleMoves.push(block)
+            }
+        }else{
+            possibleMoves.push(block)
+        }
+
+    }
+
+    // Down-Right
+    if(xAxisIndex + 1 < xAxis.length && yAxisIndex - 2 > -1){
+        let block = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxis[yAxisIndex - 2]}`);
+
+        if(block.childElementCount > 0){
+            if(block.children[0].classList.contains(enemy)){
+                possibleMoves.push(block)
+            }
+        }else{
+            possibleMoves.push(block)
+        }
+
+    }
+
+    return possibleMoves;
 }
