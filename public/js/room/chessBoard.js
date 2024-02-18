@@ -6,7 +6,7 @@ const xAxis = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const yAxis = [1, 2, 3, 4, 5, 6, 7, 8];
 
 let player = 'light';
-let enemy = null;
+let enemy = 'black';
 
 let selectedPiece = null;
 
@@ -15,13 +15,13 @@ let isRightCastlingPerformed = false;
 
 // White is Lowercase
 const lightPieces = [
-    {
-        position: "A-8",
-        icon: "../assets/chess-icons/light/chess-rook-light.svg",
-        points: 5,
-        piece: 'rook',
-        identity:'rA'
-    },
+    // {
+    //     position: "A-8",
+    //     icon: "../assets/chess-icons/light/chess-rook-light.svg",
+    //     points: 5,
+    //     piece: 'rook',
+    //     identity:'rA'
+    // },
     // {
     //     position: "B-8",
     //     icon: "../assets/chess-icons/light/chess-knight-light.svg",
@@ -30,13 +30,13 @@ const lightPieces = [
     //     identity:'nB'
         
     // },
-    // {
-    //     position: "C-8",
-    //     icon: "../assets/chess-icons/light/chess-bishop-light.svg",
-    //     points: 3,
-    //     piece: 'bishop',
-    //     identity:'bC'
-    // },
+    {
+        position: "C-8",
+        icon: "../assets/chess-icons/light/chess-bishop-light.svg",
+        points: 3,
+        piece: 'bishop',
+        identity:'bC'
+    },
     // {
     //     position: "D-8",
     //     icon: "../assets/chess-icons/light/chess-queen-light.svg",
@@ -51,13 +51,13 @@ const lightPieces = [
         piece: 'king',
         identity:'kE'
     },
-    // {
-    //     position: "F-8",
-    //     icon: "../assets/chess-icons/light/chess-bishop-light.svg",
-    //     points: 3,
-    //     piece: 'bishop',
-    //     identity:'bF'
-    // },
+    {
+        position: "F-8",
+        icon: "../assets/chess-icons/light/chess-bishop-light.svg",
+        points: 3,
+        piece: 'bishop',
+        identity:'bF'
+    },
     // {
     //     position: "G-8",
     //     icon: "../assets/chess-icons/light/chess-knight-light.svg",
@@ -65,13 +65,13 @@ const lightPieces = [
     //     piece: 'knight',
     //     identity:'nG'
     // },
-    {
-        position: "H-8",
-        icon: "../assets/chess-icons/light/chess-rook-light.svg",
-        points: 5,
-        piece: 'rook',
-        identity:'rH'
-    },
+    // {
+    //     position: "H-8",
+    //     icon: "../assets/chess-icons/light/chess-rook-light.svg",
+    //     points: 5,
+    //     piece: 'rook',
+    //     identity:'rH'
+    // },
     // {
     //     position: "A-7",
     //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
@@ -456,4 +456,105 @@ const  getRookPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
     }
     return possibleMoves
 
+}
+
+const getBishopPossibleMoves = (xAxisIndex, yAxisIndex) => {
+    let possibleMoves = [];
+
+    let topLeftCollision = false;
+    let topRightCollision = false;
+    let bottomLeftCollision = false;
+    let bottomRightCollision = false;
+
+    let yInc = 1;
+    let xInc = 1;
+
+    while(!topLeftCollision || !topRightCollision || !bottomLeftCollision || !bottomRightCollision){
+        if(!topLeftCollision || !topRightCollision){
+            if(yAxisIndex + yInc < yAxis.length && xAxisIndex - xInc > -1){
+                if(!topLeftCollision){
+                    let topLeftBlock = document.getElementById(`${xAxis[xAxisIndex - xInc]}-${yAxis[yAxisIndex + yInc]}`);
+
+                    if(topLeftBlock.childElementCount > 0){
+                        if(topLeftBlock.children[0].classList.contains(enemy)){
+                            possibleMoves.push(topLeftBlock)
+                        }
+
+                        topLeftCollision = true
+                    }else{
+                        possibleMoves.push(topLeftBlock)
+                    }
+                }
+
+            }else{
+                topLeftCollision = true
+            }
+
+            //
+
+            if(yAxisIndex + yInc < yAxis.length && xAxisIndex + xInc < xAxis.length){
+                if(!topRightCollision){
+                    let topRightBlock = document.getElementById(`${xAxis[xAxisIndex + xInc]}-${yAxis[yAxisIndex + yInc]}`);
+
+                    if(topRightBlock.childElementCount > 0){
+                        if(topRightBlock.children[0].classList.contains(enemy)){
+                            possibleMoves.push(topRightBlock)
+                        }
+
+                        topRightCollision = true
+                    }else{
+                        possibleMoves.push(topRightBlock)
+                    }
+                }
+
+            }else{
+                topRightCollision = true
+            }
+        }
+
+        if(!bottomLeftCollision || !bottomRightCollision){
+            if(yAxisIndex - yInc > -1 && xAxisIndex - xInc > -1){
+                if(!bottomLeftCollision){
+                    let bottomLeftBlock = document.getElementById(`${xAxis[xAxisIndex - xInc]}-${yAxis[yAxisIndex - yInc]}`);
+
+                    if(bottomLeftBlock.childElementCount > 0){
+                        if(bottomLeftBlock.children[0].classList.contains(enemy)){
+                            possibleMoves.push(bottomLeftBlock)
+                        }
+
+                        bottomLeftCollision = true
+                    }else{
+                        possibleMoves.push(bottomLeftBlock)
+                    }
+                }
+
+            }else{
+                bottomLeftCollision = true
+            }
+
+            //
+
+            if(yAxisIndex - yInc > -1 && xAxisIndex + xInc < xAxis.length){
+                if(!bottomRightCollision){
+                    let bottomRightBlock = document.getElementById(`${xAxis[xAxisIndex + xInc]}-${yAxis[yAxisIndex - yInc]}`);
+
+                    if(bottomRightBlock.childElementCount > 0){
+                        if(bottomRightBlock.children[0].classList.contains(enemy)){
+                            possibleMoves.push(bottomRightBlock)
+                        }
+
+                        bottomRightCollision = true
+                    }else{
+                        possibleMoves.push(bottomRightBlock)
+                    }
+                }
+
+            }else{
+                bottomRightCollision = true
+            }
+        }
+        xInc++;
+        yInc++;
+    }
+    return possibleMoves
 }
