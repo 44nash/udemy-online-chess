@@ -208,9 +208,24 @@ const startGame = (user) => {
 
     displayChessPieces()
 }
+
+const endMyTurn = (newPiece, pawnPromoted = false, castlingPerformed = false, elPassantPerformed = false) => {
+    if(kingIsAttacked){
+        // setKingIsAttacked(false);
+    }
+
+    myTurn = false;
+    setCursor("default")
+
+    // saveMove(newPieceBox, pawnPromoted, castlingPerformed, elPassantPerformed);
+
+    // checkIfKingIsAttacked(enemy);
+}
 // ---------------------------------------------------
 
 // Move Logic
+
+
 const move = (e) => {
     let currentBox = document.getElementById(selectedPiece.position);
     let boxToMove = e.target.parentNode;
@@ -238,6 +253,8 @@ const move = (e) => {
 
     if(pieceToRemove){
         // TODO: Capture piece
+        // capturePiece(pieceToRemove)
+        boxToMove.innerHTML = ""
     }
 
     boxToMove.appendChild(piece)
@@ -260,7 +277,8 @@ const move = (e) => {
     
     // TODO: Check for draw
 
-    // TODO: End my turn       
+    // TODO: End my turn
+    endMyTurn(boxToMove)       
 }
 
 const canMakeMove = ({ currentBox, boxToMove },{ piece, pieceToRemove, pieceToRemovePieceImg }) => {
@@ -278,6 +296,55 @@ const canMakeMove = ({ currentBox, boxToMove },{ piece, pieceToRemove, pieceToRe
     return true
 }
 
+const checkIfKingIsAttacked = (playerToCheck) => {
+    let kingPosition = getKingPosition(playerToCheck);
+
+    let check = isCheck(kingPosition, playerToCheck === player);
+
+    if(check){
+        if(player !== playerToCheck){
+            // TODO: Check if this is a character or just check
+        }
+
+        return true;
+    }
+
+    return false
+}
+
+const saveMove = (newPieceBox, pawnPromoted, castlingPerformed, elPassantPerformed) => {
+    let move = {from: selectedPiece.position, to: newPieceBox.id, piece: selectedPiece.piece, pieceColor: player};
+    selectedPiece = null;
+    pawnToPromotePosition = null;
+
+    if(gameHasTimer){
+        let currentTime;
+
+        if(player === 'light'){
+            currentTime = playerLightTimer.innerText
+        }else{
+            currentTime = playerBlackTimer.innerText
+        }
+
+        move.time = currentTime
+
+        timer.stop()
+    }
+
+    if(pawnPromoted){
+        // TODO: pass the pawn promotion also
+    }else if(castlingPerformed){
+        // TODO: pass the castling also
+    }else if(elPassantPerformed){
+        // TODO: pass the el passant alsp
+    }else{
+        socket.emit('move-made', roomId, move)
+    }
+}
+
+const moveEnemy = (move, pawnPromotion = null, elPassantPerformed = false) => {
+
+}
 // ---------------------------------------------------
 displayChessPieces()
 
