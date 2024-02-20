@@ -190,9 +190,19 @@ const findPossibleMoves = (position, piece) => {
 // ---------------------------------------------------
 
 // Timer Logic
-const updateTimer = () => {}
+const updateTimer = (currentPlayer, minutes, seconds) => {
+    if(currentPlayer === 'light'){
+        playerLightTimer.innerText = 
+            `${minutes >= 10 ? minutes : "0" + minutes}:${seconds >= 10 ? seconds : "0" + seconds}`
+    }else{
+        playerBlackTimer.innerText = 
+            `${minutes >= 10 ? minutes : "0" + minutes}:${seconds >= 10 ? seconds : "0" + seconds}`
+    }
+}
 
-const timerEndedCallback = () => {}
+const timerEndedCallback = () => {
+    socket.emit('timer-ended', roomId, user.username, gameStartedAtTimestamp)   
+}
 // ---------------------------------------------------
 
 // Game Logic
@@ -238,7 +248,7 @@ const move = (e) => {
     let pieceToRemove = null;
     let pieceToRemovePieceImg = null;
 
-    if(boxToMove.children > 0){
+    if(boxToMove.children.length > 0){
         if(boxToMove.children[0].classList.contains(player)){
             // TODO: Perform castling
 
@@ -255,7 +265,7 @@ const move = (e) => {
 
     if(pieceToRemove){
         // TODO: Capture piece
-        // capturePiece(pieceToRemove)
+        capturePiece(pieceToRemove)
         boxToMove.innerHTML = ""
     }
 
@@ -493,4 +503,8 @@ socket.on('game-started', (playerTwo) => {
 
 socket.on("enemy-moved", (move) => {
     moveEnemy(move)
+})
+
+socket.on("enemy-timer-updated", (minutes, seconds) => {
+    updateTimer(enemy, minutes, seconds)
 })

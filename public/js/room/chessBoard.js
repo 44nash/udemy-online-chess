@@ -287,7 +287,7 @@ const getPawnPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
         yAxisIndexForCapture = yAxisIndex + 1
         canMoveForward = yAxisIndex > 0
 
-        for(let y = yAxisIndex + 1; y >= yAxisIndex + forwardMoves; y++){
+        for(let y = yAxisIndex + 1; y <= yAxisIndex + forwardMoves; y++){
             if(y > yAxis.length){
                 break;
             }

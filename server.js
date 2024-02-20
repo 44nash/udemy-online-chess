@@ -235,6 +235,10 @@ io.on('connection', (socket) => {
         })
     })
 
+    socket.on('update-timer', (roomId, minutes, seconds) => {
+        socket.to(roomId).emit('enemy-timer-updated', minutes, seconds)
+    })
+
     socket.on('send-message', (message, user, roomId=null) => {
         if(roomId){
             socket.to(roomId).emit('receive-message', message, user);
