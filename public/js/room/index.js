@@ -32,7 +32,7 @@ let gameDetails = null;
 
 let gameHasTimer = false;
 let timer = null;
-let myTurn = true;
+let myTurn = false;
 let kingIsAttacked = false;
 let pawnToPromotePosition = null;
 let castling = null;
@@ -77,6 +77,7 @@ const displayChessPieces = () => {
     lightPieces.forEach(piece => {
         let box = document.getElementById(piece.position)
     
+        // ${piece.identity}
         box.innerHTML += `
             <div class="piece light" data-piece="${piece.piece}" data-points="${piece.points}">
                 <img src="${piece.icon}" alt="Chess Piece">
@@ -88,6 +89,7 @@ const displayChessPieces = () => {
     blackPieces.forEach(piece => {
         let box = document.getElementById(piece.position)
     
+        // ${piece.identity}
         box.innerHTML += `
             <div class="piece black" data-piece="${piece.piece}" data-points="${piece.points}">
                 <img src="${piece.icon}" alt="Chess Piece">
@@ -200,7 +202,7 @@ const setCursor = (cusror) => {
     })
 }
 
-const startGame = (user) => {
+const startGame = (playerTwo) => {
     playerBlack.querySelector(".username").innerText = playerTwo.username;
 
     waitingMessage.classList.add('hidden');
@@ -209,17 +211,17 @@ const startGame = (user) => {
     displayChessPieces()
 }
 
-const endMyTurn = (newPiece, pawnPromoted = false, castlingPerformed = false, elPassantPerformed = false) => {
+const endMyTurn = (newPieceBox, pawnPromoted = false, castlingPerformed = false, elPassantPerformed = false) => {
     if(kingIsAttacked){
-        // setKingIsAttacked(false);
+        setKingIsAttacked(false);
     }
 
     myTurn = false;
     setCursor("default")
 
-    // saveMove(newPieceBox, pawnPromoted, castlingPerformed, elPassantPerformed);
+    saveMove(newPieceBox, pawnPromoted, castlingPerformed, elPassantPerformed);
 
-    // checkIfKingIsAttacked(enemy);
+    checkIfKingIsAttacked(enemy);
 }
 // ---------------------------------------------------
 
@@ -283,17 +285,61 @@ const move = (e) => {
 
 const canMakeMove = ({ currentBox, boxToMove },{ piece, pieceToRemove, pieceToRemovePieceImg }) => {
     // TODO: Check if move is valid
-    let moveIsNotValid = false;
+    let moveIsNotValid = checkIfKingIsAttacked(player);
 
     if(moveIsNotValid){
         selectedPiece = null;
 
         if(pieceToRemove){
             // TODO: undo everything
+            pieceToRemove.appendChild(pieceToRemovePieceImg)
+
+            boxToMove.removeChild(piece);
+            boxToMove.appendChild(pieceToRemove);
+
+            if(pieceToRemove.classList.contains('black')){
+                blackCapturedPieces.removedChild(blackCapturedPieces.lastChild)
+            }else{
+                lightCapturedPieces.removedChild(lightCapturedPieces.lastChild)
+            }
         }
+
+        currentBox.appendChild(piece);
+
+
+        // displayToast("You cant make this move. Your King is under attack")
     }
 
     return true
+}
+
+const capturePiece = (pieceToRemove) => {
+    let pawnImg = pieceToRemove.children[0];
+
+    let li = document.createElement('li');
+    li.appendChild(pawnImg);
+
+    if(pieceToRemove.classList.contains('black')){
+        blackCapturedPieces.appendChild(li)
+
+        if(!gameOver){
+            if(player === 'light'){
+                myScore += parseInt(pieceToRemove.dataset.points)
+            }else{
+                enemyScore += parseInt(pieceToRemove.dataset.points)
+            }
+        }
+    }else{
+        lightCapturedPieces.appendChild(li);
+         
+        if(!gameOver){
+            if(player === 'black'){
+                myScore += parseInt(pieceToRemove.dataset.points)
+            }else{
+                enemyScore += parseInt(pieceToRemove.dataset.points)
+            }
+        }
+    }
 }
 
 const checkIfKingIsAttacked = (playerToCheck) => {
@@ -304,6 +350,12 @@ const checkIfKingIsAttacked = (playerToCheck) => {
     if(check){
         if(player !== playerToCheck){
             // TODO: Check if this is a character or just check
+            if(isCheckmate(kingPosition)){
+                socket.emit('checkmate', roomId, user.username, myScore, gameStartedAtTimestamp)
+                //endGame(user.username)
+            }else{
+                socket.emit('check', roomId);
+            }
         }
 
         return true;
@@ -343,6 +395,42 @@ const saveMove = (newPieceBox, pawnPromoted, castlingPerformed, elPassantPerform
 }
 
 const moveEnemy = (move, pawnPromotion = null, elPassantPerformed = false) => {
+    // TODO: initialize pawnsToPerformElPassant Object
+
+    const {from, to, piece} = move; // Error piece not used
+
+    let boxMovedFrom = document.getElementById(from);
+    let boxMovedTo = document.getElementById(to);
+
+    if(boxMovedTo.children.length > 0){
+        let pieceToRemove = boxMovedTo.children[0];
+
+        capturePiece(pieceToRemove)
+    }
+
+    boxMovedTo.innerHTML = "";
+
+    let enemyPiece = boxMovedFrom.children[0];
+
+    if(pawnPromotion){
+        // TODO: promote piece
+    }
+
+    boxMovedFrom.innerHTML = ""
+    boxMovedTo.appendChild(enemyPiece);
+
+    if(elPassantPerformed){
+        // TODO: perform el passant
+    }
+
+    // TODO: Check if piece and if true add the piece tp the pawnsTo PerformElPassant object
+
+    myTurn = true;
+    setCursor('pointer')
+
+    if(gameHasTimer){
+        timer.start()
+    }
 
 }
 // ---------------------------------------------------
@@ -370,7 +458,7 @@ socket.on('receive-game-details', (details) => {
 
     playerLight.querySelector(".username").innerText = playerOne.username;
 
-    if(playerOne.username = user.username){
+    if(playerOne.username === user.username){
         player = 'light'
         enemy = 'black'
 
@@ -394,10 +482,15 @@ socket.on('receive-game-details', (details) => {
 
 // If we are the first player and someone joins then this event is emitted
 socket.on('game-started', (playerTwo) => {
+    console.log(playerTwo)
     gameStartedAtTimestamp = new Date().toISOString().slice(0, 19).replace("T", ' ')
     startGame(playerTwo)
 
     if(gameHasTimer){
         timer.start()
     }
+})
+
+socket.on("enemy-moved", (move) => {
+    moveEnemy(move)
 })

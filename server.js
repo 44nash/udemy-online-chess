@@ -70,7 +70,7 @@ io.on('connection', (socket) => {
 
                     room.gameStarted = true;
                     redisClient.set(roomId, JSON.stringify(room));
-                    socket.to(roomId).emit("game-started");
+                    socket.to(roomId).emit("game-started", user );
 
                     redisClient.get('roomIndices', (err, reply) => {
                         if(err) throw err; 
@@ -107,7 +107,7 @@ io.on('connection', (socket) => {
 
                 let details = {players: room.players, time: room.time}
 
-                socket.emit("receive-game-details", details)
+                socket.emit("receive-game-details", details) // Error
             }
         })
     })
@@ -241,6 +241,33 @@ io.on('connection', (socket) => {
         }else{
             socket.broadcast.emit('receive-message', message, user, true);
         }
+    })
+
+    socket.on('move-made', (roomId, move, pawnPromotion=null, castling=null, elPassantPerformed=false) => {
+        redisClient.get(roomId, (err, reply) => {
+            if(err) throw err;
+
+            if(reply){
+                let room = JSON.parse(reply);
+
+                room.moves.push(move);
+
+                redisClient.set(roomId, JSON.stringify(room));
+                
+                if(pawnPromotion){
+                    socket.to(roomId).emit('enemy-moved_pawn-promotion', move, pawnPromotion);
+                }else if(castling){
+                    socket.to(roomId).emit('enemy-moved_castling', castling);
+                }else if(elPassantPerformed){
+                    socket.to(roomId).emit('enemy-moved_el-passant', move);
+                }else{
+                    socket.to(roomId).emit('enemy-moved', move)
+                }
+                
+            }else{
+                socket.emit("error", "Something went wrong with the connection")
+            }
+        })
     })
 
     socket.on('disconnect', () => {
