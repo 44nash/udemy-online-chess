@@ -79,7 +79,7 @@ const displayChessPieces = () => {
     
         // ${piece.identity}
         box.innerHTML += `
-            <div class="piece light" data-piece="${piece.piece}" data-points="${piece.points}">
+            <div class="piece light ${piece.identity}" data-piece="${piece.piece}" data-points="${piece.points}">
                 <img src="${piece.icon}" alt="Chess Piece">
             </div>
         `
@@ -91,7 +91,7 @@ const displayChessPieces = () => {
     
         // ${piece.identity}
         box.innerHTML += `
-            <div class="piece black" data-piece="${piece.piece}" data-points="${piece.points}">
+            <div class="piece black ${piece.identity}" data-piece="${piece.piece}" data-points="${piece.points}">
                 <img src="${piece.icon}" alt="Chess Piece">
             </div>
         `
