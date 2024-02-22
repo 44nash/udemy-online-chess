@@ -22,28 +22,28 @@ const lightPieces = [
         piece: 'rook',
         identity:'rA'
     },
-    {
-        position: "B-8",
-        icon: "../assets/chess-icons/light/chess-knight-light.svg",
-        points: 3,
-        piece: 'knight',
-        identity:'nB'
+    // {
+    //     position: "B-8",
+    //     icon: "../assets/chess-icons/light/chess-knight-light.svg",
+    //     points: 3,
+    //     piece: 'knight',
+    //     identity:'nB'
         
-    },
-    {
-        position: "C-8",
-        icon: "../assets/chess-icons/light/chess-bishop-light.svg",
-        points: 3,
-        piece: 'bishop',
-        identity:'bC'
-    },
-    {
-        position: "D-8",
-        icon: "../assets/chess-icons/light/chess-queen-light.svg",
-        points: 9,
-        piece: 'queen',
-        identity:'qD'
-    },
+    // },
+    // {
+    //     position: "C-8",
+    //     icon: "../assets/chess-icons/light/chess-bishop-light.svg",
+    //     points: 3,
+    //     piece: 'bishop',
+    //     identity:'bC'
+    // },
+    // {
+    //     position: "D-8",
+    //     icon: "../assets/chess-icons/light/chess-queen-light.svg",
+    //     points: 9,
+    //     piece: 'queen',
+    //     identity:'qD'
+    // },
     {
         position: "E-8",
         icon: "../assets/chess-icons/light/chess-king-light.svg",
@@ -51,20 +51,20 @@ const lightPieces = [
         piece: 'king',
         identity:'kE'
     },
-    {
-        position: "F-8",
-        icon: "../assets/chess-icons/light/chess-bishop-light.svg",
-        points: 3,
-        piece: 'bishop',
-        identity:'bF'
-    },
-    {
-        position: "G-8",
-        icon: "../assets/chess-icons/light/chess-knight-light.svg",
-        points: 3,
-        piece: 'knight',
-        identity:'nG'
-    },
+    // {
+    //     position: "F-8",
+    //     icon: "../assets/chess-icons/light/chess-bishop-light.svg",
+    //     points: 3,
+    //     piece: 'bishop',
+    //     identity:'bF'
+    // },
+    // {
+    //     position: "G-8",
+    //     icon: "../assets/chess-icons/light/chess-knight-light.svg",
+    //     points: 3,
+    //     piece: 'knight',
+    //     identity:'nG'
+    // },
     {
         position: "H-8",
         icon: "../assets/chess-icons/light/chess-rook-light.svg",
@@ -72,62 +72,62 @@ const lightPieces = [
         piece: 'rook',
         identity:'rH'
     },
-    {
-        position: "A-7",
-        icon: "../assets/chess-icons/light/chess-pawn-light.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'pA'
-    },
-    {
-        position: "B-7",
-        icon: "../assets/chess-icons/light/chess-pawn-light.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'pB'
-    },
-    {
-        position: "C-7",
-        icon: "../assets/chess-icons/light/chess-pawn-light.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'pC'
-    },
-    {
-        position: "D-7",
-        icon: "../assets/chess-icons/light/chess-pawn-light.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'pD'
-    },
-    {
-        position: "E-7",
-        icon: "../assets/chess-icons/light/chess-pawn-light.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'pE'
-    },
-    {
-        position: "F-7",
-        icon: "../assets/chess-icons/light/chess-pawn-light.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'pF'
-    },
-    {
-        position: "G-7",
-        icon: "../assets/chess-icons/light/chess-pawn-light.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'pG'
-    },
-    {
-        position: "H-7",
-        icon: "../assets/chess-icons/light/chess-pawn-light.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'pH'
-    },
+    // {
+    //     position: "A-7",
+    //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'pA'
+    // },
+    // {
+    //     position: "B-7",
+    //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'pB'
+    // },
+    // {
+    //     position: "C-7",
+    //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'pC'
+    // },
+    // {
+    //     position: "D-7",
+    //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'pD'
+    // },
+    // {
+    //     position: "E-7",
+    //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'pE'
+    // },
+    // {
+    //     position: "F-7",
+    //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'pF'
+    // },
+    // {
+    //     position: "G-7",
+    //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'pG'
+    // },
+    // {
+    //     position: "H-7",
+    //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'pH'
+    // },
 
 ]
 
@@ -141,28 +141,28 @@ const blackPieces = [
         piece: 'rook',
         identity:'RA'
     },
-    {
-        position: "B-1",
-        icon: "../assets/chess-icons/black/chess-knight-black.svg",
-        points: 3,
-        piece: 'knight',
-        identity:'NB'
+    // {
+    //     position: "B-1",
+    //     icon: "../assets/chess-icons/black/chess-knight-black.svg",
+    //     points: 3,
+    //     piece: 'knight',
+    //     identity:'NB'
         
-    },
-    {
-        position: "C-1",
-        icon: "../assets/chess-icons/black/chess-bishop-black.svg",
-        points: 3,
-        piece: 'bishop',
-        identity:'BC'
-    },
-    {
-        position: "D-1",
-        icon: "../assets/chess-icons/black/chess-queen-black.svg",
-        points: 9,
-        piece: 'queen',
-        identity:'QD'
-    },
+    // },
+    // {
+    //     position: "C-1",
+    //     icon: "../assets/chess-icons/black/chess-bishop-black.svg",
+    //     points: 3,
+    //     piece: 'bishop',
+    //     identity:'BC'
+    // },
+    // {
+    //     position: "D-1",
+    //     icon: "../assets/chess-icons/black/chess-queen-black.svg",
+    //     points: 9,
+    //     piece: 'queen',
+    //     identity:'QD'
+    // },
     {
         position: "E-1",
         icon: "../assets/chess-icons/black/chess-king-black.svg",
@@ -170,20 +170,20 @@ const blackPieces = [
         piece: 'king',
         identity:'KE'
     },
-    {
-        position: "F-1",
-        icon: "../assets/chess-icons/black/chess-bishop-black.svg",
-        points: 3,
-        piece: 'bishop',
-        identity:'BF'
-    },
-    {
-        position: "G-1",
-        icon: "../assets/chess-icons/black/chess-knight-black.svg",
-        points: 3,
-        piece: 'knight',
-        identity:'NG'
-    },
+    // {
+    //     position: "F-1",
+    //     icon: "../assets/chess-icons/black/chess-bishop-black.svg",
+    //     points: 3,
+    //     piece: 'bishop',
+    //     identity:'BF'
+    // },
+    // {
+    //     position: "G-1",
+    //     icon: "../assets/chess-icons/black/chess-knight-black.svg",
+    //     points: 3,
+    //     piece: 'knight',
+    //     identity:'NG'
+    // },
     {
         position: "H-1",
         icon: "../assets/chess-icons/black/chess-rook-black.svg",
@@ -191,62 +191,62 @@ const blackPieces = [
         piece: 'rook',
         identity:'RH'
     },
-    {
-        position: "A-2",
-        icon: "../assets/chess-icons/black/chess-pawn-black.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'PA'
-    },
-    {
-        position: "B-2",
-        icon: "../assets/chess-icons/black/chess-pawn-black.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'PB'
-    },
-    {
-        position: "C-2",
-        icon: "../assets/chess-icons/black/chess-pawn-black.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'PC'
-    },
-    {
-        position: "D-2",
-        icon: "../assets/chess-icons/black/chess-pawn-black.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'PD'
-    },
-    {
-        position: "E-2",
-        icon: "../assets/chess-icons/black/chess-pawn-black.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'PE'
-    },
-    {
-        position: "F-2",
-        icon: "../assets/chess-icons/black/chess-pawn-black.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'PF'
-    },
-    {
-        position: "G-2",
-        icon: "../assets/chess-icons/black/chess-pawn-black.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'PG'
-    },
-    {
-        position: "H-2",
-        icon: "../assets/chess-icons/black/chess-pawn-black.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'PH'
-    },
+    // {
+    //     position: "A-2",
+    //     icon: "../assets/chess-icons/black/chess-pawn-black.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'PA'
+    // },
+    // {
+    //     position: "B-2",
+    //     icon: "../assets/chess-icons/black/chess-pawn-black.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'PB'
+    // },
+    // {
+    //     position: "C-2",
+    //     icon: "../assets/chess-icons/black/chess-pawn-black.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'PC'
+    // },
+    // {
+    //     position: "D-2",
+    //     icon: "../assets/chess-icons/black/chess-pawn-black.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'PD'
+    // },
+    // {
+    //     position: "E-2",
+    //     icon: "../assets/chess-icons/black/chess-pawn-black.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'PE'
+    // },
+    // {
+    //     position: "F-2",
+    //     icon: "../assets/chess-icons/black/chess-pawn-black.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'PF'
+    // },
+    // {
+    //     position: "G-2",
+    //     icon: "../assets/chess-icons/black/chess-pawn-black.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'PG'
+    // },
+    // {
+    //     position: "H-2",
+    //     icon: "../assets/chess-icons/black/chess-pawn-black.svg",
+    //     points: 5,
+    //     piece: 'pawn',
+    //     identity:'PH'
+    // },
 
 ]
 
@@ -388,7 +388,7 @@ const  getRookPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
                              if(!isLeftCastlingPerformed){
                                 let pieceCollideWith = rightBlock.children[0];
 
-                                if(pieceCollideWith.CDATA_SECTION_NODE.piece === 'king'){
+                                if(pieceCollideWith.dataset.piece === 'king'){
                                     let myKingPosition = rightBlock.id;
 
                                     if(player === 'light'){
@@ -427,7 +427,7 @@ const  getRookPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
                             if(!isLeftCastlingPerformed){
                             let pieceCollideWith = leftBlock.children[0];
 
-                                if(pieceCollideWith.CDATA_SECTION_NODE.piece === 'king'){
+                                if(pieceCollideWith.dataset.piece === 'king'){
                                     let myKingPosition = leftBlock.id;
 
                                     if(player === 'light'){

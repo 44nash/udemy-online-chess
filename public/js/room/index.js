@@ -251,6 +251,7 @@ const move = (e) => {
     if(boxToMove.children.length > 0){
         if(boxToMove.children[0].classList.contains(player)){
             // TODO: Perform castling
+           performCastling(player, currentBox.id, boxToMove.id);
 
             return;
         }
@@ -397,6 +398,7 @@ const saveMove = (newPieceBox, pawnPromoted, castlingPerformed, elPassantPerform
         // TODO: pass the pawn promotion also
     }else if(castlingPerformed){
         // TODO: pass the castling also
+        socket.emit('move-made', roomId, move, null , castling)
     }else if(elPassantPerformed){
         // TODO: pass the el passant alsp
     }else{
@@ -444,7 +446,79 @@ const moveEnemy = (move, pawnPromotion = null, elPassantPerformed = false) => {
 
 }
 // ---------------------------------------------------
+
+// ====================================
+// Castling Logic
+// ====================================
+
+const performCastling = (currentPlayer, rookPosition, kingPosition) => {
+    let rookBox = document.getElementById(rookPosition)
+    let kingBox = document.getElementById(kingPosition)
+
+    let rook = rookBox.children[0];
+    let king = kingBox.children[0];
+
+    let newRookPosition = rookPosition;
+    let newKingPosition = kingPosition;
+
+    if(rookPosition[0] === 'A'){
+        newRookPosition = 'D' + rookPosition.substr(1);
+        newKingPosition = 'C' + kingPosition.substr(1);
+    }else{
+        newRookPosition = 'F' + rookPosition.substr(1);
+        newKingPosition = 'G' + kingPosition.substr(1);
+    }
+
+    rookBox.innerHTML = ""
+    kingBox.innerHTML = ""
+    
+    let newRookBox = document.getElementById(newRookPosition)
+    let newKingBox = document.getElementById(newKingPosition)
+
+    newRookBox.appendChild(rook);
+    newKingBox.appendChild(king);
+
+    if(currentPlayer === player){
+        let check = isCheck(newKingPosition);
+
+        if(check){
+            newRookBox.innerHTML = ""
+            newKingBox.innerHTML = ""
+
+            rookBox.appendChild(rook)
+            kingBox.appendChild(king)
+
+            // TODO: display error toast
+        }else{
+            if(rookPosition[0] === 'A'){
+                isLeftCastlingPerformed = true;
+            }else{
+                isRightCastlingPerformed = true;
+            }
+
+            castling = {
+                rookPosition,
+                kingPosition
+            }
+
+            endMyTurn(document.getElementById(kingPosition), false, true)
+        }
+    }else{
+        castling = null;
+
+        myTurn = true;
+        setCursor('pointer');
+
+        if(gameHasTimer){
+            timer.start()
+        }
+    }
+}
+
+// ---------------------------------------------------
+
 displayChessPieces()
+
 
 
 // ====================================
@@ -503,6 +577,11 @@ socket.on('game-started', (playerTwo) => {
 
 socket.on("enemy-moved", (move) => {
     moveEnemy(move)
+})
+
+socket.on("enemy-moved_castling", (enemyCastling) => {
+    const {rookPosition, kingPosition} = enemyCastling
+    performCastling(enemy, rookPosition, kingPosition);
 })
 
 socket.on("enemy-timer-updated", (minutes, seconds) => {
