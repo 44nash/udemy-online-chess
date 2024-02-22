@@ -274,6 +274,10 @@ io.on('connection', (socket) => {
         })
     })
 
+    socket.on('check', (roomId) => {
+        socket.to(roomId).emit('king-is-attacked')
+    })
+
     socket.on('disconnect', () => {
         let socketId = socket.id;
 

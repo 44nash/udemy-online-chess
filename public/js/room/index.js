@@ -223,6 +223,19 @@ const startGame = (playerTwo) => {
     setPiecesToPromote();
 }
 
+const setKingIsAttacked = (isAttacked) => {
+    kingIsAttacked = isAttacked;
+
+    let myKing = document.getElementById(getKingPosition(player)).children[0];
+
+    if(isAttacked){
+        myKing.classList.add('warning-block');
+        displayToast("Your king is under attack");
+    }else{
+        myKing.classList.remove('warning-block');
+    }
+}
+
 const endMyTurn = (newPieceBox, pawnPromoted = false, castlingPerformed = false, elPassantPerformed = false) => {
     if(kingIsAttacked){
         setKingIsAttacked(false);
@@ -702,4 +715,8 @@ socket.on("enemy-moved_pawn-promotion", (move, pawnPromotion) => {
 
 socket.on("enemy-timer-updated", (minutes, seconds) => {
     updateTimer(enemy, minutes, seconds)
+})
+
+socket.on("king-is-attacked", () => {
+    setKingIsAttacked(true);
 })
