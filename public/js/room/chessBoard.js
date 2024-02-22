@@ -5,6 +5,9 @@
 const xAxis = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const yAxis = [1, 2, 3, 4, 5, 6, 7, 8];
 
+const lightPiecesEndingPosition = ['A-1', 'B-1', 'C-1', 'D-1', 'E-1', 'F-1', 'G-1', 'H-1'];
+const blackPiecesEndingPosition = ['A-8', 'B-8', 'C-8', 'D-8', 'E-8', 'F-8', 'G-8', 'H-8'];
+
 let player = null;
 let enemy = null;
 
@@ -22,28 +25,27 @@ const lightPieces = [
         piece: 'rook',
         identity:'rA'
     },
-    // {
-    //     position: "B-8",
-    //     icon: "../assets/chess-icons/light/chess-knight-light.svg",
-    //     points: 3,
-    //     piece: 'knight',
-    //     identity:'nB'
-        
-    // },
-    // {
-    //     position: "C-8",
-    //     icon: "../assets/chess-icons/light/chess-bishop-light.svg",
-    //     points: 3,
-    //     piece: 'bishop',
-    //     identity:'bC'
-    // },
-    // {
-    //     position: "D-8",
-    //     icon: "../assets/chess-icons/light/chess-queen-light.svg",
-    //     points: 9,
-    //     piece: 'queen',
-    //     identity:'qD'
-    // },
+    {
+        position: "B-8",
+        icon: "../assets/chess-icons/light/chess-knight-light.svg",
+        points: 3,
+        piece: 'knight',
+        identity:'nB'    
+    },
+    {
+        position: "C-8",
+        icon: "../assets/chess-icons/light/chess-bishop-light.svg",
+        points: 3,
+        piece: 'bishop',
+        identity:'bC'
+    },
+    {
+        position: "D-8",
+        icon: "../assets/chess-icons/light/chess-queen-light.svg",
+        points: 9,
+        piece: 'queen',
+        identity:'qD'
+    },
     {
         position: "E-8",
         icon: "../assets/chess-icons/light/chess-king-light.svg",
@@ -65,20 +67,21 @@ const lightPieces = [
     //     piece: 'knight',
     //     identity:'nG'
     // },
-    {
-        position: "H-8",
-        icon: "../assets/chess-icons/light/chess-rook-light.svg",
-        points: 5,
-        piece: 'rook',
-        identity:'rH'
-    },
     // {
-    //     position: "A-7",
-    //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
+    //     position: "H-8",
+    //     icon: "../assets/chess-icons/light/chess-rook-light.svg",
     //     points: 5,
-    //     piece: 'pawn',
-    //     identity:'pA'
+    //     piece: 'rook',
+    //     identity:'rH'
     // },
+    {
+        // position: "A-7",
+        position: "A-2",
+        icon: "../assets/chess-icons/light/chess-pawn-light.svg",
+        points: 5,
+        piece: 'pawn',
+        identity:'pA'
+    },
     // {
     //     position: "B-7",
     //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
@@ -134,13 +137,13 @@ const lightPieces = [
 
 // Black is UpperCase
 const blackPieces = [
-    {
-        position: "A-1",
-        icon: "../assets/chess-icons/black/chess-rook-black.svg",
-        points: 5,
-        piece: 'rook',
-        identity:'RA'
-    },
+    // {
+    //     position: "A-1",
+    //     icon: "../assets/chess-icons/black/chess-rook-black.svg",
+    //     points: 5,
+    //     piece: 'rook',
+    //     identity:'RA'
+    // },
     // {
     //     position: "B-1",
     //     icon: "../assets/chess-icons/black/chess-knight-black.svg",
@@ -184,13 +187,13 @@ const blackPieces = [
     //     piece: 'knight',
     //     identity:'NG'
     // },
-    {
-        position: "H-1",
-        icon: "../assets/chess-icons/black/chess-rook-black.svg",
-        points: 5,
-        piece: 'rook',
-        identity:'RH'
-    },
+    // {
+    //     position: "H-1",
+    //     icon: "../assets/chess-icons/black/chess-rook-black.svg",
+    //     points: 5,
+    //     piece: 'rook',
+    //     identity:'RH'
+    // },
     // {
     //     position: "A-2",
     //     icon: "../assets/chess-icons/black/chess-pawn-black.svg",
@@ -240,13 +243,14 @@ const blackPieces = [
     //     piece: 'pawn',
     //     identity:'PG'
     // },
-    // {
-    //     position: "H-2",
-    //     icon: "../assets/chess-icons/black/chess-pawn-black.svg",
-    //     points: 5,
-    //     piece: 'pawn',
-    //     identity:'PH'
-    // },
+    {
+        // position: "H-2",
+        position: "H-7",
+        icon: "../assets/chess-icons/black/chess-pawn-black.svg",
+        points: 5,
+        piece: 'pawn',
+        identity:'PH'
+    },
 
 ]
 
@@ -932,7 +936,7 @@ const isCheck = (kingPosition, myKing = true) => {
 const isCheckmate = (enemyKingPosition) => {
     switchPlayerAndEnemy()
 
-    let splittedPos = kingPosition.split("-")
+    let splittedPos = enemyKingPosition.split("-")
 
     let xAxisPos = splittedPos[0];
     let yAxisPos = +splittedPos[1];
@@ -942,7 +946,7 @@ const isCheckmate = (enemyKingPosition) => {
 
     let kingPossibleMoves = getKingPossibleMoves(xAxisPos, yAxisPos, xAxisIndex, yAxisIndex);
 
-    let myPieces = document.getElementById(`.piece.${player}`);
+    let myPieces = document.querySelectorAll(`.piece.${player}`);
 
     for(let i = 0; i <  myPieces.length; i++){
         let myPiece = myPieces[i]
@@ -1031,4 +1035,24 @@ const getKingPosition = (pieceColor) => {
             return pieces[i].parentNode.id
         }
     }
+}
+
+const isPawnAtTheEndOfTheBoard = (currentPlayer, pawnPosition) => {
+    let isAtTheEndOfBoard = false;
+
+    if(currentPlayer === 'light'){
+        let positionIndex = lightPiecesEndingPosition.findIndex(pos => pos === pawnPosition);
+
+        if(positionIndex !== -1){
+            isAtTheEndOfBoard = true;
+        }
+    }else{
+        let positionIndex = blackPiecesEndingPosition.findIndex(pos => pos === pawnPosition);
+
+        if(positionIndex !== -1){
+            isAtTheEndOfBoard = true;
+        }
+    }
+
+    return isAtTheEndOfBoard;
 }

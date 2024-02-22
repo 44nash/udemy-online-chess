@@ -10,12 +10,12 @@ const playerLightTimer = playerLight.querySelector(".timer");
 const playerBlackTimer = playerBlack.querySelector(".timer");
 const lightCapturedPieces = document.getElementById("light-captured-pieces");
 const blackCapturedPieces = document.getElementById("black-captured-pieces");
-// const piecesToPromoteContainer = document.getElementById("pieces-to-promote-container");
-// const piecesToPromote = document.getElementById("pieces-to-promote");
-// const gameOverMessageContainer = document.getElementById("game-over-message-container");
-// const winnerUsername = gameOverMessageContainer.querySelector("p strong");
-// const myScoreElement = document.getElementById("my-score");
-// const enemyScoreElement = document.getElementById("enemy-score");
+const piecesToPromoteContainer = document.getElementById("pieces-to-promote-container");
+const piecesToPromote = document.getElementById("pieces-to-promote");
+const gameOverMessageContainer = document.getElementById("game-over-message-container");
+const winnerUsername = gameOverMessageContainer.querySelector("p strong");
+const myScoreElement = document.getElementById("my-score");
+const enemyScoreElement = document.getElementById("enemy-score");
 
 // ====================================
 // Game Variables
@@ -218,7 +218,9 @@ const startGame = (playerTwo) => {
     waitingMessage.classList.add('hidden');
     playerBlack.classList.remove('hidden');
 
-    displayChessPieces()
+    displayChessPieces();
+
+    setPiecesToPromote();
 }
 
 const endMyTurn = (newPieceBox, pawnPromoted = false, castlingPerformed = false, elPassantPerformed = false) => {
@@ -260,6 +262,21 @@ const move = (e) => {
         pieceToRemovePieceImg = pieceToRemove.children[0];
     }else{
         // TODO: Check for castling
+        if(!isLeftCastlingPerformed || !isRightCastlingPerformed){
+            if(piece.dataset.piece === 'rook'){
+                let myKingPosition = getKingPosition(player);
+
+                let pieceXAxisIndex = xAxis.findIndex(x => x === currentBox.id[0]);
+                let myKingXAxisIndex = xAxis.findIndex(x => x === myKingPosition[0]);
+
+                if(pieceXAxisIndex < myKingXAxisIndex){
+                    isLeftCastlingPerformed = true;
+                }else{
+                    isRightCastlingPerformed = true;
+                }
+            }
+            
+        }
     }
 
     currentBox.innerHTML = "";
@@ -287,6 +304,26 @@ const move = (e) => {
     }
 
     // TODO: Check for piece promotion and el passant
+    if(piece.dataset.piece === 'pawn'){
+        // pawn promotion check
+        if(
+            (player === 'light' && boxToMove.id[2] === '1') ||
+            (player === 'black' && boxToMove.id[2] === '8') 
+        ){
+            let canBePromoted = isPawnAtTheEndOfTheBoard(player, boxToMove.id);
+
+            if(canBePromoted){
+                pawnToPromotePosition = boxToMove.id;
+
+                piecesToPromoteContainer.classList.remove('hidden');
+
+                return;
+            }
+        }
+
+        // el passant check
+    }
+
     
     // TODO: Check for draw
 
@@ -318,7 +355,7 @@ const canMakeMove = ({ currentBox, boxToMove },{ piece, pieceToRemove, pieceToRe
         currentBox.appendChild(piece);
 
 
-        // displayToast("You cant make this move. Your King is under attack")
+        displayToast("You cant make this move. Your King is under attack")
     }
 
     return true
@@ -396,6 +433,14 @@ const saveMove = (newPieceBox, pawnPromoted, castlingPerformed, elPassantPerform
 
     if(pawnPromoted){
         // TODO: pass the pawn promotion also
+        let promotedPiece = newPieceBox.children[0];
+
+        let pawnPromotion = {
+            promotedTo: promotedPiece.dataset.piece,
+            pieceImg: promotedPiece.children[0].src
+        }
+
+        socket.emit('move-made', roomId, move, pawnPromotion)
     }else if(castlingPerformed){
         // TODO: pass the castling also
         socket.emit('move-made', roomId, move, null , castling)
@@ -426,6 +471,10 @@ const moveEnemy = (move, pawnPromotion = null, elPassantPerformed = false) => {
 
     if(pawnPromotion){
         // TODO: promote piece
+        const {promotedTo, pieceImg } = pawnPromotion
+
+        enemyPiece.dataset.piece = promotedTo;
+        enemyPiece.children[0].src = pieceImg;
     }
 
     boxMovedFrom.innerHTML = ""
@@ -489,6 +538,7 @@ const performCastling = (currentPlayer, rookPosition, kingPosition) => {
             kingBox.appendChild(king)
 
             // TODO: display error toast
+            displayToast("Your King is under attack")
         }else{
             if(rookPosition[0] === 'A'){
                 isLeftCastlingPerformed = true;
@@ -516,6 +566,68 @@ const performCastling = (currentPlayer, rookPosition, kingPosition) => {
 }
 
 // ---------------------------------------------------
+// ====================================
+// Pawn Promotion Logic
+// ====================================
+
+const setPiecesToPromote = () => {
+    if(player === 'light'){
+        lightPieces.forEach(piece => {
+            if(piece.piece !== 'pawn' && piece.piece !== 'king'){
+                const li = document.createElement("li");
+                li.setAttribute("data-piece", piece.piece);
+
+                const img = document.createElement("img");
+                img.src = piece.icon;
+
+                li.appendChild(img);
+                piecesToPromote.appendChild(li);
+            }
+        })
+    }else{
+        blackPieces.forEach(piece => {
+            if(piece.piece !== 'pawn' && piece.piece !== 'king'){
+                const li = document.createElement("li");
+                li.setAttribute("data-piece", piece.piece);
+
+                const img = document.createElement("img");
+                img.src = piece.icon;
+
+                li.appendChild(img);
+                piecesToPromote.appendChild(li);
+            }
+        })
+    }
+    addListenerToPiecesToPromote();
+}
+
+const onChoosePieceToPromote = e => {
+    if(!pawnToPromotePosition){
+        return;
+    }
+
+    const pieceToPromote = e.target.closest("li");
+    const pieceToPromoteImg = pieceToPromote.children[0];
+    const pieceToPromoteType = pieceToPromote.dataset.piece;
+
+    let pieceToChange = document.getElementById(pawnToPromotePosition).children[0];
+
+    pieceToChange.innerHTML = ""
+    pieceToChange.appendChild(pieceToPromoteImg)
+    pieceToChange.dataset.piece = pieceToPromoteType;
+
+    piecesToPromoteContainer.classList.add('hidden');
+
+    endMyTurn(document.getElementById(pawnToPromotePosition), true);
+}
+
+const addListenerToPiecesToPromote = () => {
+    for(let i = 0; i < piecesToPromote.children.length; i++){
+        piecesToPromote.children[i].addEventListener("click", onChoosePieceToPromote)
+    }
+}
+// ---------------------------------------------------
+
 
 displayChessPieces()
 
@@ -582,6 +694,10 @@ socket.on("enemy-moved", (move) => {
 socket.on("enemy-moved_castling", (enemyCastling) => {
     const {rookPosition, kingPosition} = enemyCastling
     performCastling(enemy, rookPosition, kingPosition);
+})
+
+socket.on("enemy-moved_pawn-promotion", (move, pawnPromotion) => {
+    moveEnemy(move, pawnPromotion)
 })
 
 socket.on("enemy-timer-updated", (minutes, seconds) => {
