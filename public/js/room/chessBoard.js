@@ -16,6 +16,9 @@ let selectedPiece = null;
 let isLeftCastlingPerformed = false;
 let isRightCastlingPerformed = false;
 
+let pawnsToPerformElPassant = {};
+let elPassantPositions = {};
+
 // White is Lowercase
 const lightPieces = [
     {
@@ -74,21 +77,21 @@ const lightPieces = [
     //     piece: 'rook',
     //     identity:'rH'
     // },
-    {
-        // position: "A-7",
-        position: "A-2",
-        icon: "../assets/chess-icons/light/chess-pawn-light.svg",
-        points: 5,
-        piece: 'pawn',
-        identity:'pA'
-    },
     // {
-    //     position: "B-7",
+    //     // position: "A-7",
+    //     position: "A-2",
     //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
     //     points: 5,
     //     piece: 'pawn',
-    //     identity:'pB'
+    //     identity:'pA'
     // },
+    {
+        position: "B-7",
+        icon: "../assets/chess-icons/light/chess-pawn-light.svg",
+        points: 5,
+        piece: 'pawn',
+        identity:'pB'
+    },
     // {
     //     position: "C-7",
     //     icon: "../assets/chess-icons/light/chess-pawn-light.svg",
@@ -194,13 +197,13 @@ const blackPieces = [
     //     piece: 'rook',
     //     identity:'RH'
     // },
-    // {
-    //     position: "A-2",
-    //     icon: "../assets/chess-icons/black/chess-pawn-black.svg",
-    //     points: 5,
-    //     piece: 'pawn',
-    //     identity:'PA'
-    // },
+    {
+        position: "A-2",
+        icon: "../assets/chess-icons/black/chess-pawn-black.svg",
+        points: 5,
+        piece: 'pawn',
+        identity:'PA'
+    },
     // {
     //     position: "B-2",
     //     icon: "../assets/chess-icons/black/chess-pawn-black.svg",
@@ -325,6 +328,41 @@ const getPawnPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
     }
 
     // TODO: Check for el passant
+    if(Object.keys(pawnsToPerformElPassant).length > 0){
+        if(xAxisIndex - 1 >= 0){
+            let leftBox = document.getElementById(`${xAxis[xAxisIndex - 1]}-${yAxisPos}`);
+
+            if(
+                leftBox.children.length > 0 &&
+                leftBox.children[0].classList.contains(enemy) &&
+                leftBox.children[0].dataset.piece === 'pawn' &&
+                pawnsToPerformElPassant[`${xAxis[xAxisIndex - 1]}-${yAxisPos}`]
+            ){
+                elPassantPositions[`${xAxis[xAxisIndex - 1]}-${yAxis[yAxisIndexForCapture]}`] = true;
+
+                let boxForElPassant = document.getElementById(`${xAxis[xAxisIndex - 1]}-${yAxis[yAxisIndexForCapture]}`);
+
+                possibleMoves.push(boxForElPassant)
+            }
+        }
+
+        if(xAxisIndex + 1 < xAxis.length){
+            let rightBox = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxisPos}`);
+
+            if(
+                rightBox.children.length > 0 &&
+                rightBox.children[0].classList.contains(enemy) &&
+                rightBox.children[0].dataset.piece === 'pawn' &&
+                pawnsToPerformElPassant[`${xAxis[xAxisIndex + 1]}-${yAxisPos}`]
+            ){
+                elPassantPositions[`${xAxis[xAxisIndex + 1]}-${yAxis[yAxisIndexForCapture]}`] = true;
+
+                let boxForElPassant = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxisPos}`);
+
+                possibleMoves.push(boxForElPassant)
+            }
+        }
+    }
 
     return possibleMoves
 }

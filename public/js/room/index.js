@@ -335,6 +335,12 @@ const move = (e) => {
         }
 
         // el passant check
+        if(elPassantPositions[boxToMove.id]){
+            performElPassant(player, currentBox.id, boxToMove.id)
+
+            return;
+        }
+
     }
 
     
@@ -458,7 +464,8 @@ const saveMove = (newPieceBox, pawnPromoted, castlingPerformed, elPassantPerform
         // TODO: pass the castling also
         socket.emit('move-made', roomId, move, null , castling)
     }else if(elPassantPerformed){
-        // TODO: pass the el passant alsp
+        // TODO: pass the el passant also
+        socket.emit('move-made', roomId, move, null , null, true)
     }else{
         socket.emit('move-made', roomId, move)
     }
@@ -466,6 +473,8 @@ const saveMove = (newPieceBox, pawnPromoted, castlingPerformed, elPassantPerform
 
 const moveEnemy = (move, pawnPromotion = null, elPassantPerformed = false) => {
     // TODO: initialize pawnsToPerformElPassant Object
+    pawnsToPerformElPassant = {}
+    elPassantPositions =  {}
 
     const {from, to, piece} = move; // Error piece not used
 
@@ -495,9 +504,27 @@ const moveEnemy = (move, pawnPromotion = null, elPassantPerformed = false) => {
 
     if(elPassantPerformed){
         // TODO: perform el passant
+        let capturedPieceBox = null;
+        if(player === 'light'){
+            capturedPieceBox = document.getElementById(`${to[0]}-${parseInt(to[2]) - 1}`)
+        }else{
+            capturedPieceBox = document.getElementById(`${to[0]}-${parseInt(to[2]) + 1}`)
+        }
+
+        capturePiece(capturedPieceBox.children[0])
+        
+        capturedPieceBox.innerHTML = ""
     }
 
     // TODO: Check if piece and if true add the piece tp the pawnsTo PerformElPassant object
+    if(piece === 'pawn'){
+        let canPerformElPassant = checkForElPassant(move)
+
+        if(canPerformElPassant){
+            pawnsToPerformElPassant[to] = true;
+        }
+
+    }
 
     myTurn = true;
     setCursor('pointer')
@@ -640,7 +667,86 @@ const addListenerToPiecesToPromote = () => {
     }
 }
 // ---------------------------------------------------
+// ====================================
+// El Passant Logic
+// ====================================
 
+const checkForElPassant = (enemyMove) => {
+    const {from, to, piece} = enemyMove;
+
+    if(piece !== 'pawn' || (from[2] !== '7' && from[2] !== '2')){
+        return false
+    }
+
+    let enemyPawn = null
+    
+    if(player === 'light'){
+        enemyPawn = blackPieces.find(enemyPiece => enemyPiece.piece === 'pawn' && enemyPiece.position === from)
+    }else{
+        enemyPawn = lightPieces.find(enemyPiece => enemyPiece.piece === 'pawn' && enemyPiece.position === from)
+    }
+
+    if(!enemyPawn){
+        return false
+    }
+
+    if(Math.abs(parseInt(to[2]) - parseInt(from[2])) == 2){
+        let splittedPos = to.split("-");
+        let xAxisPos = splittedPos[0]
+        let yAxisPos = +splittedPos[1]
+
+        let xAxisIndex = xAxis.findIndex(x => x === xAxisPos)
+
+        if(xAxisIndex - 1 >= 0){
+            let leftBox = document.getElementById(`${xAxis[xAxisIndex - 1]}-${yAxisPos}`)
+
+            if(
+                leftBox.children.length > 0 &&
+                leftBox.children[0].classList.contains(player) &&
+                leftBox.children[0].dataset.piece === 'pawn'
+            ){
+                return true
+            }
+        }
+
+        if(xAxisIndex + 1 < xAxis.length){
+            let rightBox = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxisPos}`)
+
+            if(
+                rightBox.children.length > 0 &&
+                rightBox.children[0].classList.contains(player) &&
+                rightBox.children[0].dataset.piece === 'pawn'
+            ){
+                return true
+            }
+        }
+    }
+
+    return false
+}
+
+const performElPassant = (currentPlayer, prevPawnPosition, newPawnPosition) => {
+    let capturedPawnPos = newPawnPosition[0] + '-' + prevPawnPosition[2]
+    let capturedPawnBox = document.getElementById(capturedPawnPos)
+
+    capturePiece(capturedPawnBox.children[0])
+
+    if(currentPlayer === player){
+        endMyTurn(document.getElementById(newPawnPosition), false, false, false)
+
+        delete pawnsToPerformElPassant[capturedPawnPos]
+        delete elPassantPositions[newPawnPosition]
+    }else{
+        myTurn = true;
+        setCursor('pointer')
+
+        if(gameHasTimer){
+            timer.start()
+        }
+    }
+}
+
+// ---------------------------------------------------
 
 displayChessPieces()
 
@@ -711,6 +817,10 @@ socket.on("enemy-moved_castling", (enemyCastling) => {
 
 socket.on("enemy-moved_pawn-promotion", (move, pawnPromotion) => {
     moveEnemy(move, pawnPromotion)
+})
+
+socket.on("enemy-moved_el-passant", (move) => {
+    moveEnemy(move, null, true)
 })
 
 socket.on("enemy-timer-updated", (minutes, seconds) => {
