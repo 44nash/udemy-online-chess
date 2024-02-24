@@ -13,6 +13,7 @@ dotenv.config();
 // Routers
 const viewRoutes = require('./routes/views')
 const userRoutes = require('./routes/api/user');
+const gamesRoutes = require('./routes/api/games');
 const { createTestingRooms, createRoom, joinRoom, removeRoom } = require('./util/room');
 
 const app = express()
@@ -36,6 +37,7 @@ app.use(express.urlencoded({extended: true}))
 
 app.use('/', viewRoutes)
 app.use('/api', userRoutes)
+app.use('/api', gamesRoutes)
 
 const io = socketIO(server);
 

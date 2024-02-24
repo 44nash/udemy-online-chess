@@ -33,3 +33,21 @@ exports.getRoomPage = (req, res) => {
     }
     res.render('room', {authorized:true})
 }
+
+
+
+exports.getStatsPage = (req, res) => {
+    if(!req.cookies.token){
+        return res.redirect('/login')
+    }
+    res.render('stats', {authorized:true})
+}
+
+exports.getPlayedGamesPage = (req, res) => {
+    if(!req.cookies.token){
+        return res.redirect("/login")
+    }
+
+    res.render("stats/playedGames", {authorized: true});
+}
+
