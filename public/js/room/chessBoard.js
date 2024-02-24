@@ -1,220 +1,261 @@
-// =================================================
-// Constant Variables (Initial Values For The Game)
-// =================================================
+// ====================================
+// Const Variables (Initial Values For The Game)
+// ====================================
 
-const xAxis = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-const yAxis = [1, 2, 3, 4, 5, 6, 7, 8]
+const xAxis = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+const yAxis = [1, 2, 3, 4, 5, 6, 7, 8];
 
-const lightPiecesEndingPosition = ['A-1', 'B-1', 'C-1', 'D-1', 'E-1', 'F-1', 'G-1', 'H-1']
-const blackPiecesEndingPosition = ['A-8', 'B-8', 'C-8', 'D-8', 'E-8', 'F-8', 'G-8', 'H-8']
+const lightPiecesEndingPosition = ['A-1', 'B-1', 'C-1', 'D-1', 'E-1', 'F-1', 'G-1', 'H-1'];
+const blackPiecesEndingPosition = ['A-8', 'B-8', 'C-8', 'D-8', 'E-8', 'F-8', 'G-8', 'H-8'];
 
 let player = null;
 let enemy = null;
 
+let selectedPiece = null;
+
 let isLeftCastlingPerformed = false;
 let isRightCastlingPerformed = false;
 
-let selectedPiece = null
-
-let pawnsToPerformElPassant = {}
+let pawnsToPerformElPassant = {};
 let elPassantPositions = {};
 
+
+// White is Lowercase
 const lightPieces = [
     {
         position: "A-8",
         icon: "../assets/chess-icons/light/chess-rook-light.svg",
         points: 5,
-        piece: 'rook'
+        piece: 'rook',
+        identity:'rA'
     },
     {
         position: "B-8",
         icon: "../assets/chess-icons/light/chess-knight-light.svg",
         points: 3,
-        piece: 'knight'
+        piece: 'knight',
+        identity:'nB'    
     },
     {
         position: "C-8",
         icon: "../assets/chess-icons/light/chess-bishop-light.svg",
         points: 3,
-        piece: 'bishop'
+        piece: 'bishop',
+        identity:'bC'
     },
     {
         position: "D-8",
-        icon: "../assets/chess-icons/light/chess-queen-light.svg",
-        points: 9,
-        piece: 'queen'
+        icon: "../assets/chess-icons/light/chess-king-light.svg",
+        points: 10,
+        piece: 'king',
+        identity:'kD'
+
     },
     {
         position: "E-8",
-        icon: "../assets/chess-icons/light/chess-king-light.svg",
-        points: 10,
-        piece: 'king'
+        icon: "../assets/chess-icons/light/chess-queen-light.svg",
+        points: 9,
+        piece: 'queen',
+        identity:'qE'
     },
     {
         position: "F-8",
         icon: "../assets/chess-icons/light/chess-bishop-light.svg",
         points: 3,
-        piece: 'bishop'
+        piece: 'bishop',
+        identity:'bF'
     },
     {
         position: "G-8",
         icon: "../assets/chess-icons/light/chess-knight-light.svg",
         points: 3,
-        piece: 'knight'
+        piece: 'knight',
+        identity:'nG'
     },
     {
         position: "H-8",
         icon: "../assets/chess-icons/light/chess-rook-light.svg",
         points: 5,
-        piece: 'rook'
+        piece: 'rook',
+        identity:'rH'
     },
     {
         position: "A-7",
+        // position: "A-2",
         icon: "../assets/chess-icons/light/chess-pawn-light.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'pA'
     },
     {
         position: "B-7",
         icon: "../assets/chess-icons/light/chess-pawn-light.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'pB'
     },
     {
         position: "C-7",
         icon: "../assets/chess-icons/light/chess-pawn-light.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'pC'
     },
     {
         position: "D-7",
         icon: "../assets/chess-icons/light/chess-pawn-light.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'pD'
     },
     {
         position: "E-7",
         icon: "../assets/chess-icons/light/chess-pawn-light.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'pE'
     },
     {
         position: "F-7",
         icon: "../assets/chess-icons/light/chess-pawn-light.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'pF'
     },
     {
         position: "G-7",
         icon: "../assets/chess-icons/light/chess-pawn-light.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'pG'
     },
     {
         position: "H-7",
         icon: "../assets/chess-icons/light/chess-pawn-light.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'pH'
     },
 ]
 
+
+// Black is UpperCase
 const blackPieces = [
     {
         position: "A-1",
         icon: "../assets/chess-icons/black/chess-rook-black.svg",
         points: 5,
-        piece: 'rook'
+        piece: 'rook',
+        identity:'RA'
     },
     {
         position: "B-1",
         icon: "../assets/chess-icons/black/chess-knight-black.svg",
         points: 3,
-        piece: 'knight'
+        piece: 'knight',
+        identity:'NB'
+        
     },
     {
         position: "C-1",
         icon: "../assets/chess-icons/black/chess-bishop-black.svg",
         points: 3,
-        piece: 'bishop'
+        piece: 'bishop',
+        identity:'BC'
     },
     {
         position: "D-1",
-        icon: "../assets/chess-icons/black/chess-queen-black.svg",
-        points: 9,
-        piece: 'queen'
+        icon: "../assets/chess-icons/black/chess-king-black.svg",
+        points: 10,
+        piece: 'king',
+        identity:'KD'
+
     },
     {
         position: "E-1",
-        icon: "../assets/chess-icons/black/chess-king-black.svg",
-        points: 10,
-        piece: 'king'
+        icon: "../assets/chess-icons/black/chess-queen-black.svg",
+        points: 9,
+        piece: 'queen',
+        identity:'QE'
     },
     {
         position: "F-1",
         icon: "../assets/chess-icons/black/chess-bishop-black.svg",
         points: 3,
-        piece: 'bishop'
+        piece: 'bishop',
+        identity:'BF'
     },
     {
         position: "G-1",
         icon: "../assets/chess-icons/black/chess-knight-black.svg",
         points: 3,
-        piece: 'knight'
+        piece: 'knight',
+        identity:'NG'
     },
     {
         position: "H-1",
         icon: "../assets/chess-icons/black/chess-rook-black.svg",
         points: 5,
-        piece: 'rook'
+        piece: 'rook',
+        identity:'RH'
     },
     {
         position: "A-2",
         icon: "../assets/chess-icons/black/chess-pawn-black.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'PA'
     },
     {
         position: "B-2",
         icon: "../assets/chess-icons/black/chess-pawn-black.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'PB'
     },
     {
         position: "C-2",
         icon: "../assets/chess-icons/black/chess-pawn-black.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'PC'
     },
     {
         position: "D-2",
         icon: "../assets/chess-icons/black/chess-pawn-black.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'PD'
     },
     {
         position: "E-2",
         icon: "../assets/chess-icons/black/chess-pawn-black.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'PE'
     },
     {
         position: "F-2",
         icon: "../assets/chess-icons/black/chess-pawn-black.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'PF'
     },
     {
         position: "G-2",
         icon: "../assets/chess-icons/black/chess-pawn-black.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'PG'
     },
     {
         position: "H-2",
         icon: "../assets/chess-icons/black/chess-pawn-black.svg",
         points: 5,
-        piece: 'pawn'
+        piece: 'pawn',
+        identity:'PH'
     },
+
 ]
 
 const totalPiecesPoints = lightPieces.reduce((acc, piece) => acc + piece.points, 0)
@@ -274,21 +315,22 @@ const getPawnPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
     if(canMoveForward){
         if(xAxisIndex > 0){
             let pieceToCaptureLeft = document.getElementById(`${xAxis[xAxisIndex - 1]}-${yAxis[yAxisIndexForCapture]}`);
-
+            
             if(pieceToCaptureLeft.childElementCount > 0 && pieceToCaptureLeft.children[0].classList.contains(enemy)){
-                possibleMoves.push(pieceToCaptureLeft)
+                possibleMoves.push(pieceToCaptureLeft);
             }
-        }
+        } 
 
         if(xAxisIndex < xAxis.length - 1){
             let pieceToCaptureRight = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxis[yAxisIndexForCapture]}`);
-
+            
             if(pieceToCaptureRight.childElementCount > 0 && pieceToCaptureRight.children[0].classList.contains(enemy)){
-                possibleMoves.push(pieceToCaptureRight)
+                possibleMoves.push(pieceToCaptureRight);
             }
-        }
+        } 
     }
 
+    // TODO: Check for el passant
     if(Object.keys(pawnsToPerformElPassant).length > 0){
         if(xAxisIndex - 1 >= 0){
             let leftBox = document.getElementById(`${xAxis[xAxisIndex - 1]}-${yAxisPos}`);
@@ -318,7 +360,7 @@ const getPawnPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
             ){
                 elPassantPositions[`${xAxis[xAxisIndex + 1]}-${yAxis[yAxisIndexForCapture]}`] = true;
 
-                let boxForElPassant = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxis[yAxisIndexForCapture]}`);
+                let boxForElPassant = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxisPos}`);
 
                 possibleMoves.push(boxForElPassant)
             }
@@ -328,8 +370,8 @@ const getPawnPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
     return possibleMoves
 }
 
-const getRookPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
-    let possibleMoves = []
+const  getRookPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
+    let possibleMoves = [];
 
     let topCollision = false;
     let bottomCollision = false;
@@ -354,6 +396,7 @@ const getRookPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
                         possibleMoves.push(topBlock)
                     }
                 }
+
             }else{
                 topCollision = true
             }
@@ -376,9 +419,8 @@ const getRookPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
                 bottomCollision = true
             }
 
-            yInc++
+            yInc++;
         }
-
         if(!leftCollision || !rightCollision){
             if(xAxisIndex + xInc < xAxis.length){
                 if(!rightCollision){
@@ -388,32 +430,35 @@ const getRookPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
                         if(rightBlock.children[0].classList.contains(enemy)){
                             possibleMoves.push(rightBlock);
                         }else{
-                            if(!isLeftCastlingPerformed){
-                                let pieceCollideWith = rightBlock.children[0]
+                             if(!isLeftCastlingPerformed){
+                                let pieceCollideWith = rightBlock.children[0];
 
                                 if(pieceCollideWith.dataset.piece === 'king'){
                                     let myKingPosition = rightBlock.id;
 
                                     if(player === 'light'){
-                                        if(xAxisPos + '-' + yAxisPos === 'A-8' && myKingPosition === 'E-8'){
-                                            possibleMoves.push(rightBlock)
+                                        if(xAxisPos + '-' + yAxisPos === 'A-8' && myKingPosition === 'D-8'){
+                                            possibleMoves.push(rightBlock);
                                         }
                                     }else{
-                                        if(xAxisPos + '-' + yAxisPos === 'A-1' && myKingPosition === 'E-1'){
-                                            possibleMoves.push(rightBlock)
+                                        if(xAxisPos + '-' + yAxisPos === 'A-1' && myKingPosition === 'D-1'){
+                                            possibleMoves.push(rightBlock);
                                         }
                                     }
                                 }
-                            }
-                        }
+                             }
 
+
+                        }
                         rightCollision = true;
                     }else{
-                        possibleMoves.push(rightBlock)
+                        possibleMoves.push(rightBlock);
                     }
                 }
+
+                
             }else{
-                rightCollision = true
+                rightCollision = true;
             }
 
             if(xAxisIndex - xInc > -1){
@@ -424,44 +469,42 @@ const getRookPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
                         if(leftBlock.children[0].classList.contains(enemy)){
                             possibleMoves.push(leftBlock);
                         }else{
-                            if(!isRightCastlingPerformed){
-                                let pieceCollideWith = leftBlock.children[0]
+                            if(!isLeftCastlingPerformed){
+                            let pieceCollideWith = leftBlock.children[0];
 
                                 if(pieceCollideWith.dataset.piece === 'king'){
                                     let myKingPosition = leftBlock.id;
 
                                     if(player === 'light'){
-                                        if(xAxisPos + '-' + yAxisPos === 'H-8' && myKingPosition === 'E-8'){
-                                            possibleMoves.push(leftBlock)
+                                        if(xAxisPos + '-' + yAxisPos === 'H-8' && myKingPosition === 'D-8'){
+                                            possibleMoves.push(leftBlock);
                                         }
                                     }else{
-                                        if(xAxisPos + '-' + yAxisPos === 'H-1' && myKingPosition === 'E-1'){
-                                            possibleMoves.push(leftBlock)
+                                        if(xAxisPos + '-' + yAxisPos === 'H-1' && myKingPosition === 'D-1'){
+                                            possibleMoves.push(leftBlock);
                                         }
                                     }
                                 }
                             }
                         }
-
                         leftCollision = true;
                     }else{
-                        possibleMoves.push(leftBlock)
+                        possibleMoves.push(leftBlock);
                     }
                 }
-                
+
             }else{
                 leftCollision = true
             }
-
             xInc++;
         }
     }
-
     return possibleMoves
+
 }
 
 const getBishopPossibleMoves = (xAxisIndex, yAxisIndex) => {
-    let possibleMoves = []
+    let possibleMoves = [];
 
     let topLeftCollision = false;
     let topRightCollision = false;
@@ -487,10 +530,13 @@ const getBishopPossibleMoves = (xAxisIndex, yAxisIndex) => {
                         possibleMoves.push(topLeftBlock)
                     }
                 }
+
             }else{
                 topLeftCollision = true
             }
-            
+
+            //
+
             if(yAxisIndex + yInc < yAxis.length && xAxisIndex + xInc < xAxis.length){
                 if(!topRightCollision){
                     let topRightBlock = document.getElementById(`${xAxis[xAxisIndex + xInc]}-${yAxis[yAxisIndex + yInc]}`);
@@ -505,6 +551,7 @@ const getBishopPossibleMoves = (xAxisIndex, yAxisIndex) => {
                         possibleMoves.push(topRightBlock)
                     }
                 }
+
             }else{
                 topRightCollision = true
             }
@@ -525,10 +572,13 @@ const getBishopPossibleMoves = (xAxisIndex, yAxisIndex) => {
                         possibleMoves.push(bottomLeftBlock)
                     }
                 }
+
             }else{
                 bottomLeftCollision = true
             }
-            
+
+            //
+
             if(yAxisIndex - yInc > -1 && xAxisIndex + xInc < xAxis.length){
                 if(!bottomRightCollision){
                     let bottomRightBlock = document.getElementById(`${xAxis[xAxisIndex + xInc]}-${yAxis[yAxisIndex - yInc]}`);
@@ -543,22 +593,21 @@ const getBishopPossibleMoves = (xAxisIndex, yAxisIndex) => {
                         possibleMoves.push(bottomRightBlock)
                     }
                 }
+
             }else{
                 bottomRightCollision = true
             }
         }
-
         xInc++;
         yInc++;
     }
-
     return possibleMoves
 }
 
 const getKnightPossibleMoves = (xAxisIndex, yAxisIndex) => {
     let possibleMoves = []
 
-    // LEFT-UP
+    // Left-Up
     if(xAxisIndex - 2 > -1 && yAxisIndex + 1 < yAxis.length){
         let block = document.getElementById(`${xAxis[xAxisIndex - 2]}-${yAxis[yAxisIndex + 1]}`);
 
@@ -569,9 +618,10 @@ const getKnightPossibleMoves = (xAxisIndex, yAxisIndex) => {
         }else{
             possibleMoves.push(block)
         }
+
     }
 
-    // LEFT-DOWN
+    // Left-Down
     if(xAxisIndex - 2 > -1 && yAxisIndex - 1 > -1){
         let block = document.getElementById(`${xAxis[xAxisIndex - 2]}-${yAxis[yAxisIndex - 1]}`);
 
@@ -583,8 +633,8 @@ const getKnightPossibleMoves = (xAxisIndex, yAxisIndex) => {
             possibleMoves.push(block)
         }
     }
-    
-    // RIGHT-UP
+
+    // Right-Up
     if(xAxisIndex + 2 < xAxis.length && yAxisIndex + 1 < yAxis.length){
         let block = document.getElementById(`${xAxis[xAxisIndex + 2]}-${yAxis[yAxisIndex + 1]}`);
 
@@ -595,9 +645,10 @@ const getKnightPossibleMoves = (xAxisIndex, yAxisIndex) => {
         }else{
             possibleMoves.push(block)
         }
-    }
 
-    // RIGHT-DOWN
+    }        
+
+    // Right-Down
     if(xAxisIndex + 2 < xAxis.length && yAxisIndex - 1 > -1){
         let block = document.getElementById(`${xAxis[xAxisIndex + 2]}-${yAxis[yAxisIndex - 1]}`);
 
@@ -608,9 +659,10 @@ const getKnightPossibleMoves = (xAxisIndex, yAxisIndex) => {
         }else{
             possibleMoves.push(block)
         }
+
     }
 
-    // UP-LEFT
+    // Up-Left
     if(xAxisIndex - 1 > -1 && yAxisIndex + 2 < yAxis.length){
         let block = document.getElementById(`${xAxis[xAxisIndex - 1]}-${yAxis[yAxisIndex + 2]}`);
 
@@ -621,9 +673,10 @@ const getKnightPossibleMoves = (xAxisIndex, yAxisIndex) => {
         }else{
             possibleMoves.push(block)
         }
-    }
 
-    // UP-RIGHT
+    }  
+    
+    // Up-Right
     if(xAxisIndex + 1 < xAxis.length && yAxisIndex + 2 < yAxis.length){
         let block = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxis[yAxisIndex + 2]}`);
 
@@ -634,9 +687,10 @@ const getKnightPossibleMoves = (xAxisIndex, yAxisIndex) => {
         }else{
             possibleMoves.push(block)
         }
-    }
 
-    // DOWN-LEFT
+    }
+    
+    // Down-Left
     if(xAxisIndex - 1 > -1 && yAxisIndex - 2 > -1){
         let block = document.getElementById(`${xAxis[xAxisIndex - 1]}-${yAxis[yAxisIndex - 2]}`);
 
@@ -647,9 +701,10 @@ const getKnightPossibleMoves = (xAxisIndex, yAxisIndex) => {
         }else{
             possibleMoves.push(block)
         }
+
     }
 
-    // DOWN-RIGHT
+    // Down-Right
     if(xAxisIndex + 1 < xAxis.length && yAxisIndex - 2 > -1){
         let block = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxis[yAxisIndex - 2]}`);
 
@@ -660,6 +715,7 @@ const getKnightPossibleMoves = (xAxisIndex, yAxisIndex) => {
         }else{
             possibleMoves.push(block)
         }
+
     }
 
     return possibleMoves;
@@ -681,7 +737,7 @@ const getKingPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
         }
     }
 
-    // BOTTOM
+    // Bottom
     if(yAxisIndex - 1 > -1){
         let block = document.getElementById(`${xAxisPos}-${yAxis[yAxisIndex - 1]}`)
 
@@ -694,7 +750,7 @@ const getKingPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
         }
     }
 
-    // LEFT
+    // Left
     if(xAxisIndex - 1 > -1){
         let block = document.getElementById(`${xAxis[xAxisIndex - 1]}-${yAxisPos}`)
 
@@ -707,7 +763,7 @@ const getKingPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
         }
     }
 
-    // RIGHT
+    // Right
     if(xAxisIndex + 1 < xAxis.length){
         let block = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxisPos}`)
 
@@ -720,8 +776,9 @@ const getKingPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
         }
     }
 
-    // TOP-LEFT
-    if(xAxisIndex - 1 > -1 && yAxisIndex + 1 < yAxis.length){
+
+    // TOP-Left
+    if (xAxisIndex - 1 > -1 && yAxisIndex + 1 < yAxis.length){
         let block = document.getElementById(`${xAxis[xAxisIndex - 1]}-${yAxis[yAxisIndex + 1]}`)
 
         if(block.childElementCount > 0){
@@ -733,8 +790,8 @@ const getKingPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
         }
     }
 
-    // TOP-RIGHT
-    if(xAxisIndex + 1 < xAxis.length && yAxisIndex + 1 < yAxis.length){
+    // TOP-Right
+    if (xAxisIndex + 1 < xAxis.length && yAxisIndex + 1 < yAxis.length){
         let block = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxis[yAxisIndex + 1]}`)
 
         if(block.childElementCount > 0){
@@ -746,8 +803,8 @@ const getKingPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
         }
     }
 
-    // BOTTOM-LEFT
-    if(xAxisIndex - 1 > -1 && yAxisIndex - 1 > -1){
+    // Bottom-Left
+    if (xAxisIndex - 1 > -1 && yAxisIndex - 1 > -1){
         let block = document.getElementById(`${xAxis[xAxisIndex - 1]}-${yAxis[yAxisIndex - 1]}`)
 
         if(block.childElementCount > 0){
@@ -759,8 +816,8 @@ const getKingPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
         }
     }
 
-    // BOTTOM-RIGHT
-    if(xAxisIndex + 1 < xAxis.length && yAxisIndex - 1 > -1){
+    // Bottom-Right
+    if (xAxisIndex + 1 < xAxis.length && yAxisIndex - 1 > -1){
         let block = document.getElementById(`${xAxis[xAxisIndex + 1]}-${yAxis[yAxisIndex - 1]}`)
 
         if(block.childElementCount > 0){
@@ -771,12 +828,13 @@ const getKingPossibleMoves = (xAxisPos, yAxisPos, xAxisIndex, yAxisIndex) => {
             possibleMoves.push(block)
         }
     }
-    
+
+    // TODO: Check if king is not attacked in one of these postions
     possibleMoves = possibleMoves.filter(possibleMove => {
         let kingPosition = possibleMove.id;
 
         if(!isCheck(kingPosition)){
-            return possibleMove;
+            return possibleMove
         }
     })
 
@@ -809,117 +867,110 @@ const isCheck = (kingPosition, myKing = true) => {
     let possibleMoves = Array.prototype.concat(
         getRookPossibleMoves(xAxisPos, yAxisPos, xAxisIndex, yAxisIndex),
         getBishopPossibleMoves(xAxisIndex, yAxisIndex),
-        getKnightPossibleMoves(xAxisIndex, yAxisIndex)
+        getKnightPossibleMoves(xAxisIndex, yAxisIndex)  
     )
 
     for(let i = 0; i < possibleMoves.length; i++){
         let box = possibleMoves[i];
 
-        if(box.children.length > 0){
+        if(box. children.length > 0){
             let piece = box.children[0]
 
             let pieceXPos = box.id.split("-")[0]
-            let pieceYPos = +box.id.split('-')[1]
+            let pieceYPos = +box.id.split("-")[1]
 
             let pieceXAxisIndex = xAxis.findIndex(x => x === pieceXPos)
             let pieceYAxisIndex = yAxis.findIndex(y => y === pieceYPos)
-
-            let xyBlockDiffIsTheSame;
 
             switch(piece.dataset.piece){
                 case 'pawn':
                     if(enemy === 'light'){
                         if(
-                            (pieceXAxisIndex === xAxisIndex - 1 && pieceYAxisIndex === yAxisIndex + 1) ||
-                            (pieceXAxisIndex === xAxisIndex + 1 && pieceYAxisIndex === yAxisIndex + 1)
+                            pieceXAxisIndex === xAxisIndex - 1 && pieceYAxisIndex === yAxisIndex + 1 ||
+                            pieceXAxisIndex === xAxisIndex + 1 && pieceYAxisIndex === yAxisIndex + 1
                         ){
                             if(!myKing){
                                 switchPlayerAndEnemy()
                             }
-
                             return true;
                         }
                     }else{
                         if(
-                            (pieceXAxisIndex === xAxisIndex - 1 && pieceYAxisIndex === yAxisIndex - 1) ||
-                            (pieceXAxisIndex === xAxisIndex + 1 && pieceYAxisIndex === yAxisIndex - 1)
+                            pieceXAxisIndex === xAxisIndex - 1 && pieceYAxisIndex === yAxisIndex - 1 ||
+                            pieceXAxisIndex === xAxisIndex + 1 && pieceYAxisIndex === yAxisIndex - 1
                         ){
                             if(!myKing){
                                 switchPlayerAndEnemy()
                             }
-
                             return true;
                         }
                     }
                     break;
                 case 'knight':
                     if(
-                        (pieceXAxisIndex === xAxisIndex - 1 && pieceYAxisIndex === yAxisIndex + 2) ||
-                        (pieceXAxisIndex === xAxisIndex - 1 && pieceYAxisIndex === yAxisIndex - 2) ||
-                        (pieceXAxisIndex === xAxisIndex + 1 && pieceYAxisIndex === yAxisIndex + 2) ||
-                        (pieceXAxisIndex === xAxisIndex + 1 && pieceYAxisIndex === yAxisIndex - 2) ||
-                        (pieceXAxisIndex === xAxisIndex - 2 && pieceYAxisIndex === yAxisIndex + 1) ||
-                        (pieceXAxisIndex === xAxisIndex - 2 && pieceYAxisIndex === yAxisIndex - 1) ||
-                        (pieceXAxisIndex === xAxisIndex + 2 && pieceYAxisIndex === yAxisIndex + 1) ||
-                        (pieceXAxisIndex === xAxisIndex + 2 && pieceYAxisIndex === yAxisIndex - 1)
+                        pieceXAxisIndex === xAxisIndex - 1 && pieceYAxisIndex === yAxisIndex + 2 ||
+                        pieceXAxisIndex === xAxisIndex - 1 && pieceYAxisIndex === yAxisIndex - 2 ||
+                        pieceXAxisIndex === xAxisIndex + 1 && pieceYAxisIndex === yAxisIndex + 2 ||
+                        pieceXAxisIndex === xAxisIndex + 1 && pieceYAxisIndex === yAxisIndex + 2 ||
+
+                        pieceXAxisIndex === xAxisIndex - 2 && pieceYAxisIndex === yAxisIndex + 1 ||
+                        pieceXAxisIndex === xAxisIndex - 2 && pieceYAxisIndex === yAxisIndex - 1 ||
+                        pieceXAxisIndex === xAxisIndex + 2 && pieceYAxisIndex === yAxisIndex + 1 ||
+                        pieceXAxisIndex === xAxisIndex + 2 && pieceYAxisIndex === yAxisIndex - 1 
                     ){
                         if(!myKing){
                             switchPlayerAndEnemy()
                         }
-
                         return true;
                     }
-                    break
+                    break;
                 case 'rook':
-                    if(pieceXPos === xAxisPos || pieceYPos === yAxisPos){
+                    if(
+                        pieceXPos === xAxisPos || pieceYPos === yAxisPos
+                    ){
                         if(!myKing){
                             switchPlayerAndEnemy()
                         }
-
-                        return true; 
+                        return true;
                     }
                     break;
                 case 'bishop':
-                    xyBlockDiffIsTheSame = Math.abs(xAxisIndex - pieceXAxisIndex) === Math.abs(yAxisIndex - pieceYAxisIndex)
+                    let xyBlockDiffIsTheSame = Math.abs(xAxisIndex - pieceXAxisIndex) === Math.abs(yAxisIndex - pieceYAxisIndex);
                     if(
-                        (pieceXAxisIndex < xAxisIndex && pieceYAxisIndex > yAxisIndex && xyBlockDiffIsTheSame) ||
-                        (pieceXAxisIndex < xAxisIndex && pieceYAxisIndex < yAxisIndex && xyBlockDiffIsTheSame) ||
-                        (pieceXAxisIndex > xAxisIndex && pieceYAxisIndex > yAxisIndex && xyBlockDiffIsTheSame) ||
-                        (pieceXAxisIndex > xAxisIndex && pieceYAxisIndex < yAxisIndex && xyBlockDiffIsTheSame)
+                        pieceXAxisIndex < xAxisIndex && pieceXAxisIndex > yAxisIndex && xyBlockDiffIsTheSame ||
+                        pieceXAxisIndex < xAxisIndex && pieceXAxisIndex < yAxisIndex && xyBlockDiffIsTheSame ||
+                        pieceXAxisIndex > xAxisIndex && pieceXAxisIndex > yAxisIndex && xyBlockDiffIsTheSame ||
+                        pieceXAxisIndex > xAxisIndex && pieceXAxisIndex < yAxisIndex && xyBlockDiffIsTheSame 
                     ){
                         if(!myKing){
                             switchPlayerAndEnemy()
                         }
-
-                        return true; 
+                        return true;
                     }
                     break;
                 case 'queen':
-                    xyBlockDiffIsTheSame = Math.abs(xAxisIndex - pieceXAxisIndex) === Math.abs(yAxisIndex - pieceYAxisIndex)
+                    let xyBlockDiffIsTheSameQueen = Math.abs(xAxisIndex - pieceXAxisIndex) === Math.abs(yAxisIndex - pieceYAxisIndex);
                     if(
-                        (pieceXPos === xAxisPos || pieceYPos === yAxisPos) ||
-                        (pieceXAxisIndex < xAxisIndex && pieceYAxisIndex > yAxisIndex && xyBlockDiffIsTheSame) ||
-                        (pieceXAxisIndex < xAxisIndex && pieceYAxisIndex < yAxisIndex && xyBlockDiffIsTheSame) ||
-                        (pieceXAxisIndex > xAxisIndex && pieceYAxisIndex > yAxisIndex && xyBlockDiffIsTheSame) ||
-                        (pieceXAxisIndex > xAxisIndex && pieceYAxisIndex < yAxisIndex && xyBlockDiffIsTheSame)
+                        pieceXPos === xAxisPos || pieceYPos === yAxisPos ||
+                        pieceXAxisIndex < xAxisIndex && pieceXAxisIndex > yAxisIndex && xyBlockDiffIsTheSameQueen ||
+                        pieceXAxisIndex < xAxisIndex && pieceXAxisIndex < yAxisIndex && xyBlockDiffIsTheSameQueen ||
+                        pieceXAxisIndex > xAxisIndex && pieceXAxisIndex > yAxisIndex && xyBlockDiffIsTheSameQueen ||
+                        pieceXAxisIndex > xAxisIndex && pieceXAxisIndex < yAxisIndex && xyBlockDiffIsTheSameQueen 
                     ){
                         if(!myKing){
                             switchPlayerAndEnemy()
                         }
-
-                        return true;  
+                        return true;
                     }
-                    break
+                    break;
                 default:
                     break;
             }
         }
     }
-
     if(!myKing){
         switchPlayerAndEnemy()
     }
-
     return false;
 }
 
@@ -938,13 +989,13 @@ const isCheckmate = (enemyKingPosition) => {
 
     let myPieces = document.querySelectorAll(`.piece.${player}`);
 
-    for(let i = 0; i < myPieces.length; i++){
+    for(let i = 0; i <  myPieces.length; i++){
         let myPiece = myPieces[i]
 
         if(myPiece.dataset.piece === 'king') continue;
 
         let myPieceXPos = myPiece.parentNode.id.split("-")[0]
-        let myPieceYPos = +myPiece.parentNode.id.split('-')[1]
+        let myPieceYPos = +myPiece.parentNode.id.split("-")[1]
 
         let myPieceXAxisIndex = xAxis.findIndex(x => x === myPieceXPos)
         let myPieceYAxisIndex = yAxis.findIndex(y => y === myPieceYPos)
@@ -953,23 +1004,23 @@ const isCheckmate = (enemyKingPosition) => {
 
         switch(myPiece.dataset.piece){
             case "pawn":
-                piecePossibleMoves = getPawnPossibleMoves(myPieceXPos, myPieceYPos, myPieceXAxisIndex, myPieceYAxisIndex);
+                piecePossibleMoves = getPawnPossibleMoves(myPieceXPos, myPieceYPos, myPieceXAxisIndex, myPieceYAxisIndex)
                 break;
-            case 'rook':
-                piecePossibleMoves = getRookPossibleMoves(myPieceXPos, myPieceYPos, myPieceXAxisIndex, myPieceYAxisIndex);
+            case "rook":
+                piecePossibleMoves = getRookPossibleMoves(myPieceXPos, myPieceYPos, myPieceXAxisIndex, myPieceYAxisIndex)
                 break;
-            case 'bishop':
-                piecePossibleMoves = getBishopPossibleMoves(myPieceXAxisIndex, myPieceYAxisIndex)
+            case "bishop":
+                piecePossibleMoves = getBishopPossibleMoves(myPieceXAxisIndex, myPieceYAxisIndex) 
                 break;
-            case 'knight':
-                piecePossibleMoves = getKnightPossibleMoves(myPieceXAxisIndex, myPieceYAxisIndex)
-                break;
-            case 'queen':
+            case "knight":
+                piecePossibleMoves = getKnightPossibleMoves(myPieceXAxisIndex, myPieceYAxisIndex)  
+                break; 
+            case "queen":
                 piecePossibleMoves = Array.prototype.concat(
                     getRookPossibleMoves(myPieceXPos, myPieceYPos, myPieceXAxisIndex, myPieceYAxisIndex),
-                    getBishopPossibleMoves(myPieceXAxisIndex, myPieceYAxisIndex)
+                    getBishopPossibleMoves(myPieceXAxisIndex, myPieceYAxisIndex) 
                 )
-                break;
+                break;                   
             default:
                 break;
         }
@@ -1009,17 +1060,15 @@ const isCheckmate = (enemyKingPosition) => {
 
         currentBox.appendChild(myPiece)
     }
-
     switchPlayerAndEnemy()
 
     if(kingPossibleMoves.length === 0){
         return true
     }
-
     return false
 }
 
-const getKingPosition = pieceColor => {
+const getKingPosition = (pieceColor) => {
     let pieces = document.querySelectorAll(`.piece.${pieceColor}`);
 
     for(let i = 0; i < pieces.length; i++){
