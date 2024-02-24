@@ -345,6 +345,11 @@ const move = (e) => {
 
     
     // TODO: Check for draw
+    if(checkForDraw()){
+        endGame();
+        socket.emit("draw", roomId)
+
+    }
 
     // TODO: End my turn
     endMyTurn(boxToMove)       
@@ -419,7 +424,7 @@ const checkIfKingIsAttacked = (playerToCheck) => {
             // TODO: Check if this is a character or just check
             if(isCheckmate(kingPosition)){
                 socket.emit('checkmate', roomId, user.username, myScore, gameStartedAtTimestamp)
-                //endGame(user.username)
+                endGame(user.username)
             }else{
                 socket.emit('check', roomId);
             }
@@ -747,6 +752,58 @@ const performElPassant = (currentPlayer, prevPawnPosition, newPawnPosition) => {
 }
 
 // ---------------------------------------------------
+// ====================================
+// Draw Logic
+// ====================================
+
+const checkForDraw = () => {
+    let myTotalPieces = document.querySelectorAll(`.piece.${player}`).length
+    let enemyTotalPieces = document.querySelectorAll(`.piece.${enemy}`).length
+
+    return myTotalPieces === enemyTotalPieces && myTotalPieces === 1
+}
+
+// ---------------------------------------------------
+
+// ====================================
+// Game Over Logic
+// ====================================
+
+const endGame = (winner=null) => {
+    gameOver = true;
+    myTurn =false;
+    setCursor("default")
+
+    if(gameHasTimer){
+        timer.stop()
+    }   
+    
+    if(winner){
+        // TODO: Finish Game Over Functionality
+        winnerUsername.innerText = winner;
+
+        let winningPoints = 0;
+
+        if(winner === user.username){
+            winningPoints = ~~((myScore / totalPiecesPoints) * 100)
+            myScoreElement.innerText = winningPoints
+            enemyScoreElement.innerText = winningPoints
+            myScoreElement.classList.add("positive-score")
+            socket.emit("update-scores", roomId, winningPoints, -winningPoints)
+        }else{
+            winningPoints = ~~((enemyScore / totalPiecesPoints) * 100)
+            myScoreElement.innerText = -winningPoints
+            enemyScoreElement.innerText = +winningPoints
+            enemyScoreElement.classList.add("positive-score")
+        }
+    }else{
+        winnerUsername.innerText = "Nobody"
+    }
+
+    gameOverMessageContainer.classList.remove("hidden")
+}
+
+// ---------------------------------------------------
 
 displayChessPieces()
 
@@ -788,7 +845,7 @@ socket.on('receive-game-details', (details) => {
         startGame(user)
     }
     if(gameHasTimer){
-        timer = new Timer(player, roomId, gameDetails.time, 0, updateTimer, timerEndedCallback)
+        timer = new Timer(player, roomId, gameDetails.time, 0, updateTimer, timerEndedCallback) 
     }
     
     hideSpinner();
@@ -829,4 +886,21 @@ socket.on("enemy-timer-updated", (minutes, seconds) => {
 
 socket.on("king-is-attacked", () => {
     setKingIsAttacked(true);
+})
+
+
+socket.on("you-lost", (winner, newEnemyScore = null) => {
+    if(newEnemyScore){
+        enemyScore = newEnemyScore
+    }
+
+    endGame(winner)
+})
+
+socket.on("you-won", () => {
+    endGame(user.username)
+})
+
+socket.on("draw", () => {
+    endGame()
 })
