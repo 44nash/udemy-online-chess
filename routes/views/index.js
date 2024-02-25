@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const {getRegisterPage, getLoginPage, getLobbyPage, getGamesPage, getRoomPage, getStatsPage,  getPlayedGamesPage} = require("../../controllers/views")
+const {getRegisterPage, getLoginPage, getLobbyPage, getGamesPage, getRoomPage, getStatsPage,  getPlayedGamesPage, getProfilePage} = require("../../controllers/views")
 
 const router = Router();
 
@@ -17,6 +17,6 @@ router.get('/my-stats', getStatsPage)
 
 router.get("/my-stats/played-games/:gameId", getPlayedGamesPage)
 
-// router.get("/profile", getProfilePage)
+router.get("/profile", getProfilePage)
 
 module.exports = router;

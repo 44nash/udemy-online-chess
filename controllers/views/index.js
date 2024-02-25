@@ -51,3 +51,10 @@ exports.getPlayedGamesPage = (req, res) => {
     res.render("stats/playedGames", {authorized: true});
 }
 
+exports.getProfilePage = (req, res) => {
+    if(!req.cookies.token){
+        return res.redirect("/login")
+    }
+
+    res.render("profile", {authorized: true});
+}
